@@ -260,6 +260,186 @@ topTaxplot_family <- topTaxplot_family +
   theme(legend.title = element_text(face="italic"))
 topTaxplot_family 
 
+
+###### Alpha Diversity - Measures ######
+## Alpha diversity: the species richness that occurs within a given area within a region
+## that is smaller than the entire distribution of the species (Moore, 2013)
+
+### I use the relative abundance or dat.01per data
+adivmeasures(dat.01per)
+## This function returns one dataframe that contains the alpha diversity 
+## measure metrics for each sample
+
+
+# Merge diversity with metadata table and export as csv
+# DONE IN EXCEL BEFORE RUNNING NEXT CODE: rename the first column of both data
+# tables as the SAME NAME. e.g. both should have the sample column labelled as "Sample"
+diversitybysample <- read.csv("AlphaDiversity.csv", row.names = 1)
+
+#met <- read.csv("metadata.csv", row.names = 1)
+
+rownames(metadata)
+
+#comparing row names of my alpha diversity data and metadata
+# Extract row names
+div_row <- rownames(diversitybysample)
+metadata_row <- rownames(metadata)
+# Find common row names
+common_row_names <- intersect(div_row, metadata_row)
+
+# Subset data frames to keep only common rows
+diversitybysample <- diversitybysample[common_row_names, , drop = FALSE]
+met <- metadata[common_row_names, , drop = FALSE]
+
+adivmet <- cbind(diversitybysample,met)
+head(adivmet)
+write.csv(adivmet,"Metadata-Diversity.csv")
+
+###### Alpha Diversity Statistics ######
+
+# load in your metadata that has the alpha diversity indices included
+Alpha_data <- read.csv("Metadata-Diversity.csv", header = TRUE, row.names = 1)
+head(Alpha_data)
+
+#### Testing Statistical Significance
+## Normality - Shapiro Test (only done on NUMERIC data)
+## p <= 0.05 = H0 REJECTED -> DATA IS NOT NORMAL
+## p > 0.05 = H0 ACCEPTED -> DATA IS NORMAL
+
+## If data is NOT normal the first time, try transforming the data using log
+## and sqrt and retest for normality.
+
+#Alpha Diversity Variables - Test for Normality
+shapiro.test(Alpha_data$S) #not normal
+shapiro.test(Alpha_data$N) #not normal
+shapiro.test(Alpha_data$H) #not Normal
+shapiro.test(Alpha_data$J) #not Normal
+shapiro.test(Alpha_data$inv.D) #not normal
+
+str(Alpha_data)
+
+#format as factor for categorical factors
+Alpha_data$SPP <- as.factor(Alpha_data$SPP)
+Alpha_data$Site <- as.factor(Alpha_data$Site)
+Alpha_data$Year <- as.factor(Alpha_data$Year)
+Alpha_data$Region <- as.factor(Alpha_data$Region)
+
+str(Alpha_data)
+#Site
+
+### CONTINUE HERE IF DATA IS NOT NORMAL AND TRANSFORMATIONS DID NOT WORK
+# Kruskal Wallis: Nonparametric Data (not normal)
+# Pairwise Wilcox Test - calculate pairwise comparisons between group levels
+#     with corrections for multiple testing (non-parametric)
+
+#Species richness
+S_krusk_Species <- nonp_kruskal(Alpha_data$S, Alpha_data$SPP)  #significant
+S_krusk_Year <- nonp_kruskal(Alpha_data$S, Alpha_data$Year) #significant , but very close to 0.05
+S_krusk_Region <- nonp_kruskal(Alpha_data$S, Alpha_data$Region) #significantbut very close to 0.05
+S_krusk_Site <- nonp_kruskal(Alpha_data$S, Alpha_data$Site) #significant, but most sites are similar except for DC1-BC5 which anyway dont have all species
+
+#Shannon Diversity Index (H)
+H_krusk_Species <- nonp_kruskal(Alpha_data$H, Alpha_data$SPP) #MMUR is different
+H_krusk_Year <- nonp_kruskal(Alpha_data$H, Alpha_data$Year) #significant , but very close to 0.05
+H_krusk_Region <- nonp_kruskal(Alpha_data$H, Alpha_data$Region) #significantbut very close to 0.05
+H_krusk_Site <- nonp_kruskal(Alpha_data$H, Alpha_data$Site) #No difference
+
+#Species Evenness (J)
+
+J_krusk_Species <- nonp_kruskal(Alpha_data$J, Alpha_data$SPP) #MMUR is different
+J_krusk_Year <- nonp_kruskal(Alpha_data$J, Alpha_data$Year) #significant , but very close to 0.05
+J_krusk_Region <- nonp_kruskal(Alpha_data$J, Alpha_data$Region) #significantbut very close to 0.05
+J_krusk_Site <- nonp_kruskal(Alpha_data$J, Alpha_data$Site) #No difference
+
+#number of individuals
+inv.D_krusk_Species <- nonp_kruskal(Alpha_data$inv.D, Alpha_data$SPP) #MMUR is different
+inv.D_krusk_Site <- nonp_kruskal(Alpha_data$inv.D, Alpha_data$Site) #No difference
+
+# Looking into the Kruskal-Wallis results for each diversity metric
+# The important results to be noted are the KW p-values and the letter comparisons.
+# You can also take a look at the individual comparison p-values by looking into the pairwise table.
+
+S_krusk_Species$`Kruskal-Wallis Results` ## Kruskal-Wallis chi-squared = 44.745, df = 3, p-value = 1.048e-09
+S_krusk_Species$pairwise
+S_krusk_Species$`letter-comparisons` # Bast = SW, EFLE = MMUR, any other combination is not significant 
+
+### You would then repeat these steps for the 4 other alpha diversity metrics!
+
+### Plotting boxplots of alpha diversity by specified variable
+## NOTES: You can replace "Year" with your specified variable
+##        Adding text to your graph is OPTIONAL but if you are adding it then
+##        you'll have to play around with their coordinates, what they say, size, and color.
+
+# Creating the plots for different factors
+# Load necessary libraries
+library(ggplot2)
+library(patchwork)
+
+# Define a colorblind-friendly palette
+cb_palette <- scale_fill_manual(values = c("#D55E00", "#009E73", "#F0E442", "#0072B2", "#CC79A7"))
+
+# Adjusted Species Richness (S) plot
+S_krusk_Species$`letter-comparisons`
+
+p_S <- ggplot(data = Alpha_data, aes(x = SPP, y = S)) +
+  geom_violin(aes(fill = SPP), alpha = 0.6) +
+  annotate("text", x = 1, y = 2500, label = "a", size = 5) +
+  annotate("text", x = 2, y = 2500, label = "b", size = 5) +
+  annotate("text", x = 3, y = 2000, label = "c", size = 5) +
+  annotate("text", x = 4, y = 700, label = "c", size = 5) +
+  annotate("text", x = 5, y = 1100, label = "ac", size = 5) +
+  labs(title = "Species Richness (S)", y = "Species Richness", x = NULL) +
+  theme_bw() +
+  theme(legend.position = "none", axis.title.x = element_blank()) +
+  cb_palette
+
+# Adjusted Shannon Diversity Index (H) plot
+p_H <- ggplot(data = Alpha_data, aes(x = SPP, y = H)) +
+  geom_violin(aes(fill = SPP), alpha = 0.6) +
+  annotate("text", x = 1, y = 6.7, label = "a", size = 5) +
+  annotate("text", x = 2, y = 6.7, label = "b", size = 5) +
+  annotate("text", x = 3, y = 6, label = "c", size = 5) +
+  annotate("text", x = 4, y = 4, label = "c", size = 5) +
+  annotate("text", x = 5, y = 6.3, label = "ab", size = 5) +
+  labs(title = "Shannon Diversity Index (H)", y = "Shannon Diversity", x = NULL) +
+  theme_bw() +
+  theme(legend.position = "none", axis.title.x = element_blank()) +
+  cb_palette
+
+# Adjusted Species Evenness (J) plot
+p_J <- ggplot(data = Alpha_data, aes(x = SPP, y = J)) +
+  geom_violin(aes(fill = SPP), alpha = 0.6) +
+  annotate("text", x = 1, y = 0.95, label = "a", size = 5) +
+  annotate("text", x = 2, y = 0.95, label = "b", size = 5) +
+  annotate("text", x = 3, y = 0.85, label = "c", size = 5) +
+  annotate("text", x = 4, y = 0.75, label = "c", size = 5) +
+  annotate("text", x = 5, y = 0.9, label = "ab", size = 5) +
+  labs(title = "Species Evenness (J)", y = "Species Evenness", x = "Species") +
+  theme_bw() +
+  theme(legend.position = "none") +
+  cb_palette
+
+# Combine the plots using patchwork
+combined_plot <- (p_S / p_H / p_J) +
+  plot_layout(guides = "collect") &
+  theme(plot.title = element_text(size = 14, face = "bold"),
+        plot.caption = element_text(size = 10))
+
+# Display the combined plot
+print(combined_plot)
+
+ggsave(
+  filename = "SPP_comparison_combined_Alpha diversity.jpeg", # Output file name
+  plot = combined_plot,           # Plot object
+  device = "jpeg",                # File format
+  width = 10,                     # Width of the image in inches
+  height = 12,                    # Height of the image in inches
+  dpi = 300                       # Resolution in dots per inch
+)
+
+
+#################
+
 bc.dist <- vegdist(dat.01per, method = "bray") #creating distance matrix 
 
 dis.SPP <- betadisper(bc.dist, metadata$SPP) #calculates the dispersion (variances) within each group
