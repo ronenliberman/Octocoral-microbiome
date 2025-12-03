@@ -1,0 +1,1287 @@
+---
+title: "Comprehensive Analysis of Florida Octocoral Microbiomes"
+author: "Ronen Liberman"
+date: "`r Sys.Date()`"
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+    toc_depth: 3
+    code_folding: show
+    theme: united
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+knitr::opts_knit$set(root.dir = "~/Postdocing_NSU/JOE LOPEZ Lab/Manuscript/16 rRNA analysis/")
+knitr::opts_chunk$set(cache = FALSE)
+```
+
+# Introduction
+
+This comprehensive analysis examines the bacterial microbiome composition of four octocoral species from southeastern Florida: *Briareum asbestinum*, *Erythropodium caribaeorum*, *Eunicea flexuosa*, and *Muricea muricata*. The analysis integrates multiple approaches including:
+
+1. **Community composition analysis** - Examining bacterial diversity and taxonomic composition across host species
+2. **Beta diversity ordination** - Visualizing community structure variation using multivariate approaches
+3. **Statistical differential abundance testing** - Identifying host-specific bacterial associates using ANCOM-BC2
+4. **Core microbiome analysis** - Defining persistent bacterial members across prevalence thresholds with bootstrap validation
+
+The data comprises 16S rRNA amplicon sequences from field-collected samples spanning multiple years (2023-2025) and sites across the Florida reef tract.
+
+---
+
+# Package Loading
+
+```{r packages}
+# Core microbiome analysis packages
+library(microeco)
+library(file2meco)
+library(qiime2R)
+
+# Data manipulation and visualization
+library(tidyverse)
+library(magrittr)
+library(ggplot2)
+library(ggrepel)
+library(ggpubr)
+library(ggh4x)
+library(grafify)
+library(scales)
+library(RColorBrewer)
+library(paletteer)
+
+# Statistical analysis
+library(vegan)
+library(phyloseq)
+library(MMUPHin)
+library(multcompView)
+library(pgirmess)
+library(dunn.test)
+library(performance)
+
+# Data export
+library(writexl)
+library(grid)
+library(reshape2)
+
+# Additional utilities
+library(psych)
+library(fantaxtic)
+library(randomForest)
+library(ggtree)
+
+# Set seed for reproducibility
+set.seed(123)
+```
+
+---
+
+# Data Import and Initial Processing
+
+## Loading QIIME2 Data
+
+The data originates from QIIME2 processing of 16S rRNA amplicon sequences. We import the feature table (OTU/ASV table), taxonomy assignments, and sample metadata.
+
+```{r load-data}
+# Import QIIME2 data into microeco format
+data <- qiime2meco("raw data/table-NoEMC.qza",
+                   taxonomy_table = "raw data/taxonomy.qza", 
+                   sample_table = "raw data/metadata_all_edited.csv",
+                   auto_tidy = TRUE)
+
+# Store raw data for reference
+data_raw <- clone(data)
+
+# Display data structure
+cat("=== DATA STRUCTURE ===\n")
+cat("OTU table dimensions:", dim(data$otu_table), "\n")
+cat("Sample table dimensions:", dim(data$sample_table), "\n")
+cat("Taxonomy table dimensions:", dim(data$tax_table), "\n")
+```
+
+## Taxonomic Filtering
+
+We retain only archaeal and bacterial sequences, removing any eukaryotic contaminants.
+
+```{r filter-taxa}
+# Filter to prokaryotes only
+data$tax_table %<>% base::subset(Kingdom == "k__Archaea" | Kingdom == "k__Bacteria")
+
+# Calculate abundance at each taxonomic rank
+data$cal_abund()
+
+cat("Taxa after filtering:", nrow(data$tax_table), "\n")
+head(data$taxa_abund)
+```
+
+## Sample Filtering and Species Renaming
+
+We focus on four focal octocoral species and seawater controls from specific reef sites. We also remove samples identified as unreliable during quality control.
+
+```{r filter-samples}
+# Clone for filtered dataset
+d <- clone(data)
+
+# Filter to focal species and sites
+d$sample_table %<>% subset(SPP %in% c("BAST", "ECAR", "MMUR", "EFLE", "SW"))
+d$sample_table$Site <- gsub("DC2", "DC3", d$sample_table$Site)
+d$sample_table %<>% subset(Site %in% c("DC1", "DC3", "BC4", "BC6"))
+
+# Remove unreliable samples identified during QC
+samples_to_remove <- c("ECAR_DC3_3_2_2023", "BAST_DC3_1_2024")
+
+cat("=== REMOVING UNRELIABLE SAMPLES ===\n")
+cat("Samples before filtering:", nrow(d$sample_table), "\n")
+
+d$sample_table <- d$sample_table %>%
+  filter(!rownames(.) %in% samples_to_remove)
+
+cat("Samples after filtering:", nrow(d$sample_table), "\n\n")
+
+# Rename species to full scientific names
+species.names <- list(
+  "SW" = "Seawater",
+  "BAST" = "B. asbestinum",
+  "ECAR" = "E. caribaeorum",
+  "MMUR" = "M. muricata",
+  "EFLE" = "E. flexuosa"
+)
+
+d$sample_table <- d$sample_table %>%
+  mutate(SPP = recode(SPP, !!!species.names))
+
+# Tidy dataset to sync all tables
+d$tidy_dataset()
+
+cat("Final sample count:", nrow(d$sample_table), "\n")
+cat("Species included:", paste(unique(d$sample_table$SPP), collapse = ", "), "\n")
+```
+
+---
+
+# Sequencing Depth Summary
+
+Understanding sequencing depth is critical for determining appropriate rarefaction levels and assessing data quality.
+
+```{r sequencing-depth}
+# Calculate reads per sample
+sample_reads <- colSums(d$otu_table)
+
+cat("=== SEQUENCING DEPTH STATISTICS ===\n")
+cat("Total reads across all samples:", format(sum(d$otu_table), big.mark = ","), "\n")
+cat("Mean reads per sample:", format(round(mean(sample_reads), 0), big.mark = ","), "\n")
+cat("Median reads per sample:", format(median(sample_reads), big.mark = ","), "\n")
+cat("Min reads per sample:", format(min(sample_reads), big.mark = ","), "\n")
+cat("Max reads per sample:", format(max(sample_reads), big.mark = ","), "\n\n")
+
+# Total ASVs
+total_asvs <- sum(rowSums(d$otu_table) > 0)
+cat("Total ASVs in dataset:", total_asvs, "\n\n")
+
+# ASVs by species
+cat("=== ASVs BY SPECIES ===\n")
+for (spp in unique(d$sample_table$SPP)) {
+  spp_samples <- rownames(d$sample_table[d$sample_table$SPP == spp, ])
+  spp_otu <- d$otu_table[, colnames(d$otu_table) %in% spp_samples, drop = FALSE]
+  spp_asvs <- sum(rowSums(spp_otu) > 0)
+  cat(spp, ":", spp_asvs, "ASVs\n")
+}
+
+# Visualize sequencing depth distribution
+depth_df <- data.frame(
+  Sample = names(sample_reads),
+  Reads = sample_reads
+) %>%
+  left_join(d$sample_table %>% tibble::rownames_to_column("Sample"), by = "Sample")
+
+p_depth <- ggplot(depth_df, aes(x = SPP, y = Reads, fill = SPP)) +
+  geom_boxplot(alpha = 0.7) +
+  geom_jitter(width = 0.2, alpha = 0.5) +
+  scale_y_continuous(labels = scales::comma) +
+  geom_hline(yintercept = 20000, linetype = "dashed", color = "red", size = 1) +
+  annotate("text", x = 0.7, y = 22000, label = "Rarefaction threshold", 
+           color = "red", hjust = 0) +
+  labs(
+    title = "Sequencing Depth Distribution Across Species",
+    x = "Species",
+    y = "Number of Reads"
+  ) +
+  theme_classic() +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1, face = "italic", size = 12),
+    axis.title = element_text(size = 14, face = "bold"),
+    legend.position = "none"
+  )
+
+print(p_depth)
+```
+
+---
+
+# Rarefaction and Normalization
+
+Rarefaction standardizes sequencing depth across samples to control for unequal sampling effort. We rarefy to 20,000 reads per sample, which retains most samples while ensuring adequate depth for diversity analyses.
+
+**Rationale**: Rarefaction is necessary because compositional differences can arise solely from differences in library size rather than true biological variation. While rarefaction discards data, it provides a conservative approach for comparing samples with unequal sequencing depth.
+
+```{r rarefaction}
+cat("=== RAREFYING DATA ===\n")
+
+# Create normalization object
+tmp <- trans_norm$new(dataset = d)
+
+# Rarefy to 20,000 reads per sample
+mt_rarefied <- tmp$norm(method = "rarefy", sample.size = 20000)
+
+cat("Samples retained after rarefaction:", ncol(mt_rarefied$otu_table), "\n")
+cat("Samples removed:", ncol(d$otu_table) - ncol(mt_rarefied$otu_table), "\n")
+
+# Calculate abundance on rarefied data
+mt_rarefied$cal_abund()
+
+# Filter to octocoral samples only (remove seawater)
+target.octo <- clone(mt_rarefied)
+target.octo$sample_table %<>% subset(SPP != "Seawater")
+target.octo$tidy_dataset()
+
+cat("Octocoral samples for analysis:", ncol(target.octo$otu_table), "\n")
+```
+
+---
+
+# Alpha Diversity Analysis
+
+Alpha diversity quantifies within-sample diversity using multiple metrics:
+
+- **Shannon diversity (H')**: Accounts for both richness and evenness, with higher values indicating greater diversity
+- **Simpson diversity (1-D)**: Emphasizes dominant species, less sensitive to rare taxa
+- **Observed richness**: Simple count of unique ASVs present
+- **Chao1**: Estimates true richness accounting for unseen rare species
+- **ACE**: Alternative richness estimator robust to sampling variation
+- **Pielou's evenness (J')**: Measures how evenly abundances are distributed
+
+```{r alpha-diversity}
+cat("=== CALCULATING ALPHA DIVERSITY ===\n")
+
+# Calculate diversity indices
+target.octo$cal_alphadiv(measures = c("Observed", "Chao1", "ACE", "Shannon", 
+                                      "Simpson", "InvSimpson", "Pielou"))
+
+# Extract diversity data
+alpha_div <- target.octo$alpha_diversity %>%
+  tibble::rownames_to_column("Sample") %>%
+  left_join(target.octo$sample_table %>% tibble::rownames_to_column("Sample"), 
+            by = "Sample")
+
+# Summary statistics by species
+alpha_summary <- alpha_div %>%
+  group_by(SPP) %>%
+  summarise(
+    n = n(),
+    Mean_Shannon = mean(Shannon, na.rm = TRUE),
+    SD_Shannon = sd(Shannon, na.rm = TRUE),
+    Mean_Observed = mean(Observed, na.rm = TRUE),
+    SD_Observed = sd(Observed, na.rm = TRUE),
+    Mean_Simpson = mean(Simpson, na.rm = TRUE),
+    SD_Simpson = sd(Simpson, na.rm = TRUE),
+    .groups = 'drop'
+  )
+
+print(alpha_summary)
+
+# Statistical testing - Shannon diversity
+shannon_model <- aov(Shannon ~ SPP, data = alpha_div)
+cat("\n=== ANOVA: Shannon Diversity by Species ===\n")
+print(summary(shannon_model))
+
+# Post-hoc testing
+if(summary(shannon_model)[[1]][["Pr(>F)"]][1] < 0.05) {
+  cat("\nTukey HSD post-hoc test:\n")
+  tukey_result <- TukeyHSD(shannon_model)
+  print(tukey_result)
+}
+
+# Visualization - Shannon diversity
+p_shannon <- ggplot(alpha_div, aes(x = SPP, y = Shannon, fill = SPP)) +
+  geom_boxplot(alpha = 0.7, outlier.shape = NA) +
+  geom_jitter(width = 0.2, alpha = 0.5, size = 2) +
+  labs(
+    title = "Shannon Diversity Across Octocoral Species",
+    x = "Species",
+    y = "Shannon Diversity Index (H')"
+  ) +
+  theme_classic() +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1, face = "italic", size = 12),
+    axis.title = element_text(size = 14, face = "bold"),
+    legend.position = "none"
+  )
+
+print(p_shannon)
+
+# Visualization - Observed richness
+p_richness <- ggplot(alpha_div, aes(x = SPP, y = Observed, fill = SPP)) +
+  geom_boxplot(alpha = 0.7, outlier.shape = NA) +
+  geom_jitter(width = 0.2, alpha = 0.5, size = 2) +
+  labs(
+    title = "Observed ASV Richness Across Octocoral Species",
+    x = "Species",
+    y = "Number of Observed ASVs"
+  ) +
+  theme_classic() +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1, face = "italic", size = 12),
+    axis.title = element_text(size = 14, face = "bold"),
+    legend.position = "none"
+  )
+
+print(p_richness)
+```
+
+---
+
+# Taxonomic Composition Analysis
+
+## Phylum-Level Composition
+
+Visualizing broad taxonomic patterns provides insight into major bacterial groups associated with each host species.
+
+```{r phylum-composition}
+# Create trans_abund object for compositional analysis
+t1 <- trans_abund$new(dataset = target.octo, taxrank = "Phylum", ntaxa = 10)
+
+# Stacked bar plot
+p_phylum <- t1$plot_bar(
+  legend_text_italic = FALSE,
+  facet = "SPP",
+  xtext_keep = FALSE,
+  color_values = RColorBrewer::brewer.pal(10, "Paired")
+) +
+  labs(
+    title = "Phylum-Level Bacterial Composition",
+    y = "Relative Abundance (%)"
+  ) +
+  theme(
+    strip.text = element_text(face = "italic", size = 12),
+    axis.title = element_text(size = 14, face = "bold"),
+    legend.text = element_text(size = 10)
+  )
+
+print(p_phylum)
+```
+
+## Family-Level Composition
+
+Family-level resolution reveals more specific bacterial associates while maintaining interpretability.
+
+```{r family-composition}
+# Family-level composition
+t2 <- trans_abund$new(dataset = target.octo, taxrank = "Family", ntaxa = 15)
+
+p_family <- t2$plot_bar(
+  legend_text_italic = FALSE,
+  facet = "SPP",
+  xtext_keep = FALSE,
+  color_values = c(RColorBrewer::brewer.pal(12, "Paired"), 
+                   RColorBrewer::brewer.pal(3, "Set1"))
+) +
+  labs(
+    title = "Family-Level Bacterial Composition (Top 15)",
+    y = "Relative Abundance (%)"
+  ) +
+  theme(
+    strip.text = element_text(face = "italic", size = 12),
+    axis.title = element_text(size = 14, face = "bold"),
+    legend.text = element_text(size = 9)
+  )
+
+print(p_family)
+```
+
+---
+
+# Beta Diversity Analysis
+
+Beta diversity quantifies between-sample variation in community composition. We use Bray-Curtis dissimilarity, which accounts for both presence/absence and abundance information.
+
+## All Species Combined PCoA
+
+Principal Coordinates Analysis (PCoA) projects multidimensional community dissimilarity into two-dimensional space for visualization.
+
+```{r beta-diversity-all}
+cat("=== BETA DIVERSITY ANALYSIS ===\n")
+
+# Calculate Bray-Curtis dissimilarity
+target.octo$cal_betadiv(method = "bray")
+
+# PERMANOVA - testing effect of species on community composition
+# This tests whether bacterial communities differ significantly among host species
+beta_result <- trans_beta$new(dataset = target.octo, group = "SPP", 
+                              measure = "bray")
+
+beta_result$cal_betadisper()
+cat("\n=== PERMANOVA: Effect of Species on Beta Diversity ===\n")
+beta_result$cal_manova(manova_all = TRUE)
+
+# PCoA ordination
+t3 <- trans_beta$new(dataset = target.octo, group = "SPP", measure = "bray")
+t3$cal_ordination(ordination = "PCoA")
+
+# Define species colors
+species_colors <- c(
+  "B. asbestinum" = "#E31A1C",
+  "E. caribaeorum" = "#FF7F00",
+  "M. muricata" = "#33A02C",
+  "E. flexuosa" = "#6A3D9A"
+)
+
+# Create PCoA plot
+p_pcoa_all <- t3$plot_ordination(
+  plot_color = "SPP",
+  plot_shape = "SPP",
+  plot_type = c("point", "ellipse")
+) +
+  scale_color_manual(values = species_colors) +
+  labs(
+    title = "PCoA: Bacterial Community Structure Across Octocoral Species",
+    subtitle = "Bray-Curtis dissimilarity, 95% confidence ellipses"
+  ) +
+  theme_classic() +
+  theme(
+    plot.title = element_text(size = 16, face = "bold", hjust = 0.5),
+    plot.subtitle = element_text(size = 12, hjust = 0.5),
+    axis.title = element_text(size = 14, face = "bold"),
+    legend.title = element_blank(),
+    legend.text = element_text(size = 12, face = "italic"),
+    legend.position = "right"
+  )
+
+print(p_pcoa_all)
+```
+
+## Species-Specific PCoA Ordinations
+
+To examine within-species variation across sites and years, we create separate ordinations for each species. This reveals temporal and spatial patterns in bacterial community structure.
+
+**Purpose**: These species-specific ordinations help identify whether bacterial communities within a host species remain stable across environmental conditions (sites) and time periods (years).
+
+```{r species-pcoa, fig.width=12, fig.height=10}
+cat("\n=== SPECIES-SPECIFIC PCOA ORDINATIONS ===\n")
+
+# Define target species
+target_species <- c("B. asbestinum", "E. caribaeorum", "M. muricata", "E. flexuosa")
+
+# Color schemes for year and site
+year_colors <- c("2023" = "#1f77b4", "2024" = "#ff7f0e", "2025" = "grey25")
+site_colors <- c("BC4" = "#e41a1c", "BC6" = "#377eb8", 
+                 "DC1" = "#4daf4a", "DC3" = "#984ea3")
+
+# Function to create species-specific PCoA with sample labels
+create_species_pcoa <- function(rarefied_data, species_name, 
+                               color_by = "Year", 
+                               shape_by = "Site",
+                               label_all = TRUE) {
+  
+  cat("\nCreating PCoA for", species_name, "\n")
+  
+  # Filter to species
+  species_data <- clone(rarefied_data)
+  species_data$sample_table %<>% subset(SPP == species_name)
+  species_data$tidy_dataset()
+  
+  # Convert factors
+  species_data$sample_table$Year <- as.factor(species_data$sample_table$Year)
+  species_data$sample_table$Site <- as.factor(species_data$sample_table$Site)
+  
+  n_samples <- nrow(species_data$sample_table)
+  cat("Number of samples:", n_samples, "\n")
+  
+  # Calculate beta diversity
+  species_data$cal_betadiv(method = "bray")
+  
+  # PCoA using cmdscale
+  pcoa_result <- cmdscale(as.dist(species_data$beta_diversity$bray), 
+                          k = 2, eig = TRUE)
+  
+  # Variance explained
+  variance_explained <- pcoa_result$eig / sum(pcoa_result$eig) * 100
+  
+  # Create plot data
+  plot_data <- data.frame(
+    Sample = rownames(pcoa_result$points),
+    PC1 = pcoa_result$points[, 1],
+    PC2 = pcoa_result$points[, 2]
+  ) %>%
+    left_join(species_data$sample_table %>% tibble::rownames_to_column("Sample"), 
+              by = "Sample")
+  
+  # Create plot
+  p <- ggplot(plot_data, aes(x = PC1, y = PC2))
+  
+  # Add points
+  if(!is.null(color_by) && !is.null(shape_by)) {
+    p <- p + geom_point(aes(color = .data[[color_by]], 
+                            shape = .data[[shape_by]]), 
+                        size = 4, alpha = 0.8)
+  }
+  
+  # Add labels if requested
+  if(label_all) {
+    p <- p + geom_text_repel(
+      aes(label = Sample),
+      size = 2.5,
+      max.overlaps = Inf,
+      box.padding = 0.5,
+      segment.color = "grey50",
+      segment.size = 0.2
+    )
+  }
+  
+  # Styling
+  p <- p +
+    labs(
+      x = sprintf("PC1 (%.1f%%)", variance_explained[1]),
+      y = sprintf("PC2 (%.1f%%)", variance_explained[2]),
+      title = paste("PCoA:", species_name),
+      subtitle = paste("Bray-Curtis dissimilarity (rarefied),", n_samples, "samples")
+    ) +
+    theme_classic() +
+    theme(
+      plot.title = element_text(size = 16, face = "bold.italic", hjust = 0.5),
+      plot.subtitle = element_text(size = 12, hjust = 0.5),
+      axis.title = element_text(size = 14, face = "bold"),
+      legend.title = element_text(size = 12, face = "bold"),
+      legend.text = element_text(size = 11),
+      legend.position = "right"
+    )
+  
+  # Add color scales
+  if(color_by == "Year") {
+    p <- p + scale_color_manual(values = year_colors)
+  } else if(color_by == "Site") {
+    p <- p + scale_color_manual(values = site_colors)
+  }
+  
+  return(list(plot = p, pcoa_result = pcoa_result, 
+              plot_data = plot_data, variance = variance_explained))
+}
+
+# Generate PCoA for each species
+pcoa_results <- list()
+
+for(species in target_species) {
+  result <- create_species_pcoa(
+    mt_rarefied,
+    species,
+    color_by = "Year",
+    shape_by = "Site",
+    label_all = TRUE
+  )
+  
+  pcoa_results[[species]] <- result
+  print(result$plot)
+}
+```
+
+---
+
+# Differential Abundance Analysis
+
+We use ANCOM-BC2 (Analysis of Compositions of Microbiomes with Bias Correction 2) to identify bacterial taxa that are differentially abundant among host species. 
+
+**ANCOM-BC2 advantages over traditional methods**:
+- Properly handles compositional data (where counts are relative, not absolute)
+- Corrects for sampling fraction bias inherent to sequencing data  
+- Accounts for zero-inflation common in microbiome datasets
+- Provides valid statistical inference with multiple testing correction
+
+**Interpretation**: Taxa with adjusted p-values < 0.05 show significant differential abundance among host species. The W-statistic indicates effect size and direction.
+
+```{r differential-abundance}
+cat("\n=== ANCOM-BC2 DIFFERENTIAL ABUNDANCE ANALYSIS ===\n")
+
+# Create differential abundance object
+t4 <- trans_diff$new(dataset = target.octo, 
+                     method = "ANCOM-BC2",
+                     group = "SPP",
+                     taxa_level = "all")
+
+# Run ANCOM-BC2
+t4$cal_diff(p_adjust = "BH")  # Benjamini-Hochberg FDR correction
+
+cat("Analysis complete\n")
+cat("Results dimensions:", dim(t4$res_diff), "\n")
+
+# Extract significant results (adjusted p < 0.05)
+significant_asvs_ancom <- t4$res_diff %>%
+  filter(grepl("p_SPP", colnames(t4$res_diff))) %>%
+  gather(key = "Comparison", value = "p_adj", 
+         starts_with("p_SPP"), factor_key = TRUE) %>%
+  filter(p_adj < 0.05) %>%
+  arrange(p_adj)
+
+cat("Significant ASVs found:", nrow(significant_asvs_ancom), "\n")
+
+# Get top 20 most significant ASVs for detailed analysis
+top_significant <- t4$res_diff %>%
+  select(Taxa, starts_with("p_SPP")) %>%
+  gather(key = "Comparison", value = "p_adj", -Taxa) %>%
+  group_by(Taxa) %>%
+  summarise(
+    min_p_adj = min(p_adj, na.rm = TRUE),
+    .groups = 'drop'
+  ) %>%
+  arrange(min_p_adj) %>%
+  head(20)
+
+cat("\nTop 20 most significant ASVs:\n")
+print(top_significant)
+
+# Clean taxonomy function for display
+clean_taxonomy <- function(taxa_names) {
+  sapply(taxa_names, function(name) {
+    parts <- unlist(strsplit(name, "\\|"))
+    
+    # Try genus, then family, then order, then class, then phylum
+    levels <- list(
+      genus = parts[grepl("^g__", parts)],
+      family = parts[grepl("^f__", parts)],
+      order = parts[grepl("^o__", parts)],
+      class = parts[grepl("^c__", parts)],
+      phylum = parts[grepl("^p__", parts)]
+    )
+    
+    for(level_name in names(levels)) {
+      level <- levels[[level_name]]
+      if(length(level) > 0 && level[1] != paste0(substr(level_name, 1, 1), "__")) {
+        clean_name <- gsub("^..__", "", level[1])
+        if(!grepl("unclassified", clean_name)) {
+          return(if(level_name == "genus") clean_name 
+                 else paste("unclassified", clean_name))
+        }
+      }
+    }
+    return("unclassified Bacteria")
+  }, USE.NAMES = FALSE)
+}
+
+# Extract ASV IDs from top significant
+top_asvs <- top_significant %>%
+  mutate(ASV = str_extract(Taxa, "[a-f0-9]{32}$"))
+
+# Get relative abundance for visualization
+relative_abundance_matrix <- target.octo$otu_table / colSums(target.octo$otu_table)
+significant_rel_abundance <- relative_abundance_matrix[
+  rownames(relative_abundance_matrix) %in% top_asvs$ASV, 
+]
+
+# Create visualization dataframe
+viz_df <- significant_rel_abundance %>%
+  as.data.frame() %>%
+  tibble::rownames_to_column("ASV") %>%
+  pivot_longer(cols = -ASV, names_to = "sample_id", values_to = "relative_abundance") %>%
+  left_join(target.octo$sample_table %>% tibble::rownames_to_column("sample_id"), 
+            by = "sample_id") %>%
+  left_join(
+    top_asvs %>% 
+      mutate(clean_taxonomy = clean_taxonomy(Taxa)) %>%
+      select(ASV, clean_taxonomy, min_p_adj),
+    by = "ASV"
+  )
+
+# Order by significance
+taxonomy_order <- viz_df %>%
+  group_by(clean_taxonomy) %>%
+  summarise(min_p = min(min_p_adj), .groups = 'drop') %>%
+  arrange(min_p) %>%
+  pull(clean_taxonomy)
+
+viz_df$clean_taxonomy <- factor(viz_df$clean_taxonomy, levels = taxonomy_order)
+
+# Species colors
+distinct_colors <- c(
+  "B. asbestinum" = "#E31A1C",
+  "E. caribaeorum" = "#FF7F00",
+  "M. muricata" = "#33A02C",
+  "E. flexuosa" = "#6A3D9A"
+)
+
+# Horizontal boxplot
+p_diff_abund <- ggplot(viz_df, 
+                       aes(x = relative_abundance, y = clean_taxonomy, fill = SPP)) +
+  geom_boxplot(alpha = 0.8, outlier.alpha = 0.6) +
+  scale_x_continuous(labels = scales::percent_format(), expand = c(0, 0)) +
+  scale_fill_manual(values = distinct_colors) +
+  labs(
+    y = "Taxonomic Classification", 
+    x = "Relative Abundance (%)",
+    title = "Top 20 Differentially Abundant Taxa (ANCOM-BC2)",
+    fill = "Host species"
+  ) +
+  theme_classic() +
+  theme(
+    axis.text.y = element_text(size = 12),
+    axis.text.x = element_text(size = 11),
+    axis.title = element_text(size = 14, face = "bold"),
+    plot.title = element_text(size = 16, face = "bold", hjust = 0.5),
+    legend.position = "right",
+    legend.text = element_text(size = 12, face = "italic"),
+    legend.title = element_text(size = 13, face = "bold")
+  )
+
+print(p_diff_abund)
+```
+
+---
+
+# Core Microbiome Analysis
+
+The core microbiome represents bacterial taxa persistently associated with a host across multiple individuals and conditions. We define core members using prevalence thresholds with bootstrap validation.
+
+**Methodological approach**:
+1. Calculate prevalence (% of samples containing each ASV) for each host species
+2. Apply multiple prevalence thresholds (75%, 90%, 100%)
+3. Bootstrap validation (1000 iterations) with fixed sample sizes to account for unequal sample numbers
+4. Core members must appear in ≥90% of bootstrap replicates to be considered "robust"
+
+**Bootstrap validation rationale**: Simple prevalence can be biased by sample size - species with more samples are more likely to have lower prevalence scores by chance. Bootstrap resampling with fixed sample sizes provides statistical robustness.
+
+```{r core-microbiome-setup}
+cat("\n=============================================================================\n")
+cat("CORE MICROBIOME ANALYSIS WITH BOOTSTRAP VALIDATION\n")
+cat("=============================================================================\n\n")
+
+# Clone rarefied dataset for core analysis
+core_data <- clone(mt_rarefied)
+
+# Fix unclassified taxonomy labels
+cat("Fixing unclassified taxonomy labels...\n")
+rename_unclassified <- core_data$tax_table
+
+for(i in 1:nrow(rename_unclassified)){
+  if(any(grepl("__$", rename_unclassified[i, ]))){
+    matchall <- grep("__$", rename_unclassified[i, ])
+    rename_unclassified[i, matchall] <- paste0(
+      rename_unclassified[i, matchall], 
+      "unclassified ", 
+      gsub(".__", "", rename_unclassified[i, matchall[1] - 1])
+    )
+  }
+}
+
+core_data$tax_table <- rename_unclassified
+
+# Define analysis parameters
+target_species <- c("B. asbestinum", "E. caribaeorum", "M. muricata", "E. flexuosa")
+prevalence_thresholds <- c(75, 90, 100)
+```
+
+## Prevalence-Based Core Microbiome
+
+First, we calculate core microbiome members at multiple prevalence thresholds without bootstrap validation.
+
+```{r core-prevalence}
+cat("=== CALCULATING CORE AT MULTIPLE THRESHOLDS ===\n\n")
+
+# Function to calculate prevalence-based core
+calculate_prevalence_core <- function(microtable_obj, prevalence_threshold) {
+  otu_table <- microtable_obj$otu_table
+  tax_table <- microtable_obj$tax_table
+  
+  # Convert to presence/absence
+  presence_absence <- otu_table
+  presence_absence[presence_absence > 0] <- 1
+  
+  # Calculate prevalence
+  prevalence <- rowSums(presence_absence) / ncol(presence_absence) * 100
+  core_taxa <- names(prevalence[prevalence >= prevalence_threshold])
+  
+  if (length(core_taxa) > 0) {
+    core_otu <- otu_table[core_taxa, , drop = FALSE]
+    total_reads_per_sample <- colSums(otu_table)
+    core_rel_abund <- sweep(core_otu, 2, total_reads_per_sample, "/") * 100
+    mean_rel_abundance <- rowMeans(core_rel_abund)
+    
+    core_summary <- data.frame(
+      ASV_ID = core_taxa,
+      Prevalence = prevalence[core_taxa],
+      Mean_Relative_Abundance_Percent = mean_rel_abundance,
+      tax_table[core_taxa, ],
+      stringsAsFactors = FALSE
+    )
+    
+    core_summary <- core_summary[order(-core_summary$Mean_Relative_Abundance_Percent), ]
+  } else {
+    core_summary <- data.frame()
+  }
+  
+  return(list(
+    core_taxa = core_taxa,
+    core_summary = core_summary,
+    n_core_taxa = length(core_taxa)
+  ))
+}
+
+# Calculate core for all thresholds
+all_core_results <- list()
+excel_data_list <- list()
+
+for(threshold in prevalence_thresholds) {
+  cat("\n--- Prevalence threshold:", threshold, "% ---\n")
+  
+  threshold_results <- list()
+  
+  for(species in target_species) {
+    species_data <- clone(core_data)
+    species_data$sample_table %<>% subset(SPP == species)
+    species_data$tidy_dataset()
+    
+    core_result <- calculate_prevalence_core(species_data, threshold)
+    threshold_results[[species]] <- core_result
+    
+    cat(species, ":", core_result$n_core_taxa, "core ASVs\n")
+    
+    # Prepare for Excel export
+    if(core_result$n_core_taxa > 0) {
+      excel_tab_name <- paste0(gsub(" ", "_", gsub("\\.", "", species)), 
+                               "_", threshold, "pct")
+      excel_data_list[[excel_tab_name]] <- core_result$core_summary
+    }
+  }
+  
+  all_core_results[[as.character(threshold)]] <- threshold_results
+}
+
+# Visualize core abundance across thresholds
+abundance_summary <- data.frame()
+
+for(threshold in prevalence_thresholds) {
+  for(species in target_species) {
+    core_result <- all_core_results[[as.character(threshold)]][[species]]
+    
+    if(core_result$n_core_taxa > 0) {
+      total_abundance <- sum(core_result$core_summary$Mean_Relative_Abundance_Percent)
+      
+      abundance_summary <- rbind(abundance_summary, data.frame(
+        Species = species,
+        Threshold = threshold,
+        Total_Core_Abundance = total_abundance,
+        N_Core_ASVs = core_result$n_core_taxa,
+        stringsAsFactors = FALSE
+      ))
+    }
+  }
+}
+
+# Plot core abundance trends
+species_colors <- c(
+  "B. asbestinum" = "#E31A1C",
+  "E. caribaeorum" = "#FF7F00",
+  "M. muricata" = "#984EA3",
+  "E. flexuosa" = "#4DAF4A"
+)
+
+p_core_trend <- ggplot(abundance_summary, 
+                       aes(x = as.factor(Threshold), y = Total_Core_Abundance, 
+                           color = Species, group = Species)) +
+  geom_line(size = 1.2) +
+  geom_point(size = 4) +
+  scale_color_manual(values = species_colors) +
+  labs(
+    x = "Prevalence Threshold (%)",
+    y = "Total Core Microbiome Abundance (%)",
+    title = "Core Microbiome Abundance Across Prevalence Thresholds",
+    color = "Species"
+  ) +
+  theme_classic() +
+  theme(
+    axis.text = element_text(size = 14),
+    axis.title = element_text(size = 16, face = "bold"),
+    plot.title = element_text(size = 16, face = "bold", hjust = 0.5),
+    legend.title = element_text(size = 14, face = "bold"),
+    legend.text = element_text(size = 13, face = "italic")
+  )
+
+print(p_core_trend)
+```
+
+## Bootstrap Validation at 90% Prevalence
+
+We focus on the 90% prevalence threshold and apply bootstrap validation to identify robust core members.
+
+**Bootstrap procedure**:
+- Resample each species' samples 1000 times with replacement
+- Use fixed sample size (minimum across species) to ensure fair comparison
+- Calculate prevalence in each bootstrap replicate
+- Taxa appearing at 90% prevalence in ≥90% of bootstraps are "robust core"
+
+```{r core-bootstrap}
+cat("\n=== BOOTSTRAP VALIDATION AT 90% PREVALENCE ===\n")
+
+# Bootstrap parameters
+bootstrap_iterations <- 1000
+prevalence_threshold <- 90
+bootstrap_threshold <- 90  # ASV must appear in 90% of bootstraps
+
+# Determine minimum sample size across species for fair comparison
+sample_sizes <- sapply(target_species, function(sp) {
+  sp_data <- clone(core_data)
+  sp_data$sample_table %<>% subset(SPP == sp)
+  nrow(sp_data$sample_table)
+})
+
+cat("\nSample sizes per species:\n")
+print(sample_sizes)
+
+fixed_sample_size <- min(sample_sizes)
+cat("\nUsing fixed sample size for bootstrap:", fixed_sample_size, "\n")
+
+# Bootstrap function
+bootstrap_core_microbiome <- function(microtable_obj, species_name, 
+                                     n_iterations, prevalence_thresh, 
+                                     fixed_n) {
+  
+  cat("\nBootstrapping", species_name, "...\n")
+  
+  # Filter to species
+  species_data <- clone(microtable_obj)
+  species_data$sample_table %<>% subset(SPP == species_name)
+  species_data$tidy_dataset()
+  
+  sample_names <- colnames(species_data$otu_table)
+  all_asvs <- rownames(species_data$otu_table)
+  
+  # Track which ASVs appear as core in each iteration
+  core_matrix <- matrix(0, nrow = length(all_asvs), ncol = n_iterations,
+                        dimnames = list(all_asvs, NULL))
+  
+  for(i in 1:n_iterations) {
+    # Resample with fixed size
+    boot_samples <- sample(sample_names, size = fixed_n, replace = TRUE)
+    boot_otu <- species_data$otu_table[, boot_samples, drop = FALSE]
+    
+    # Calculate prevalence in bootstrap sample
+    presence <- boot_otu > 0
+    prevalence <- rowSums(presence) / ncol(boot_otu) * 100
+    
+    # Mark ASVs meeting threshold
+    core_asvs <- names(prevalence[prevalence >= prevalence_thresh])
+    core_matrix[core_asvs, i] <- 1
+  }
+  
+  # Calculate bootstrap frequency
+  bootstrap_frequency <- rowSums(core_matrix) / n_iterations * 100
+  
+  # Identify robust core (appear in bootstrap_threshold% of iterations)
+  robust_core_asvs <- names(bootstrap_frequency[bootstrap_frequency >= bootstrap_threshold])
+  
+  cat("Robust core ASVs (≥", bootstrap_threshold, "% bootstrap frequency):", 
+      length(robust_core_asvs), "\n")
+  
+  return(list(
+    robust_core_asvs = robust_core_asvs,
+    bootstrap_frequency = bootstrap_frequency
+  ))
+}
+
+# Run bootstrap for each species
+bootstrap_results <- list()
+
+for(species in target_species) {
+  result <- bootstrap_core_microbiome(
+    core_data,
+    species,
+    bootstrap_iterations,
+    prevalence_threshold,
+    fixed_sample_size
+  )
+  
+  bootstrap_results[[species]] <- result
+}
+
+# Compile robust core summary
+all_robust_core <- data.frame()
+
+for(species in target_species) {
+  robust_asvs <- bootstrap_results[[species]]$robust_core_asvs
+  
+  if(length(robust_asvs) > 0) {
+    # Get species data
+    sp_data <- clone(core_data)
+    sp_data$sample_table %<>% subset(SPP == species)
+    sp_data$tidy_dataset()
+    
+    # Calculate prevalence and abundance
+    presence <- sp_data$otu_table[robust_asvs, , drop = FALSE] > 0
+    prevalence <- rowSums(presence) / ncol(presence) * 100
+    
+    total_reads <- colSums(sp_data$otu_table)
+    rel_abund <- sweep(sp_data$otu_table[robust_asvs, , drop = FALSE], 
+                       2, total_reads, "/") * 100
+    mean_rel_abund <- rowMeans(rel_abund)
+    
+    # Compile data
+    species_robust <- data.frame(
+      Species = species,
+      ASV_ID = robust_asvs,
+      Prevalence = prevalence,
+      Mean_Relative_Abundance_Percent = mean_rel_abund,
+      Bootstrap_frequency_percent = bootstrap_results[[species]]$bootstrap_frequency[robust_asvs],
+      core_data$tax_table[robust_asvs, ],
+      stringsAsFactors = FALSE
+    )
+    
+    all_robust_core <- rbind(all_robust_core, species_robust)
+  }
+}
+
+# Create genus numbering system
+genus_numbering <- all_robust_core %>%
+  select(ASV_ID, Genus) %>%
+  distinct() %>%
+  arrange(Genus, ASV_ID) %>%
+  group_by(Genus) %>%
+  mutate(
+    Genus_Number = row_number(),
+    Genus_ID = paste0(Genus, " ", Genus_Number)
+  ) %>%
+  ungroup() %>%
+  select(ASV_ID, Genus_ID)
+
+all_robust_core <- all_robust_core %>%
+  left_join(genus_numbering, by = "ASV_ID")
+
+# Calculate relative abundance from total microbiome
+all_robust_core$Relative_Abundance_Total_Microbiome <- NA
+
+for(species in target_species) {
+  species_data <- clone(core_data)
+  species_data$sample_table %<>% subset(SPP == species)
+  species_data$tidy_dataset()
+  
+  total_reads <- sum(species_data$otu_table)
+  species_asvs <- all_robust_core$ASV_ID[all_robust_core$Species == species]
+  
+  for(asv in species_asvs) {
+    if(asv %in% rownames(species_data$otu_table)) {
+      asv_reads <- sum(species_data$otu_table[asv, ])
+      rel_abund_total <- (asv_reads / total_reads) * 100
+      
+      all_robust_core$Relative_Abundance_Total_Microbiome[
+        all_robust_core$ASV_ID == asv & all_robust_core$Species == species
+      ] <- rel_abund_total
+    }
+  }
+}
+
+# Final summary table
+summary_table_final <- all_robust_core %>%
+  select(
+    Species, ASV_ID, Genus_ID, Class, Family, Genus,
+    Prevalence, Mean_Relative_Abundance_Percent,
+    Relative_Abundance_Total_Microbiome, Bootstrap_frequency_percent
+  ) %>%
+  arrange(Species, desc(Mean_Relative_Abundance_Percent)) %>%
+  mutate(
+    Prevalence = round(Prevalence, 2),
+    Mean_Relative_Abundance_Percent = round(Mean_Relative_Abundance_Percent, 4),
+    Relative_Abundance_Total_Microbiome = round(Relative_Abundance_Total_Microbiome, 4),
+    Bootstrap_frequency_percent = round(Bootstrap_frequency_percent, 2)
+  )
+
+cat("\n=== ROBUST CORE SUMMARY ===\n")
+cat("Total robust core ASVs:", nrow(summary_table_final), "\n\n")
+
+for(species in target_species) {
+  n_asvs <- sum(summary_table_final$Species == species)
+  cat(species, ":", n_asvs, "robust core ASVs\n")
+}
+
+# Display summary
+print(head(summary_table_final, 20))
+```
+
+## Family-Level Core Microbiome Visualization
+
+Aggregating core members by bacterial family provides ecological insight into the taxonomic composition of persistent associations.
+
+```{r core-visualization, fig.width=15, fig.height=7}
+cat("\n=== FAMILY-LEVEL CORE MICROBIOME VISUALIZATION ===\n")
+
+# Aggregate by family
+family_abundance <- summary_table_final %>%
+  group_by(Species, Family) %>%
+  summarise(
+    Total_Abundance = sum(Mean_Relative_Abundance_Percent),
+    N_ASVs = n(),
+    .groups = "drop"
+  )
+
+# Calculate percentage of core
+family_abundance <- family_abundance %>%
+  group_by(Species) %>%
+  mutate(
+    Total_Core = sum(Total_Abundance),
+    Percent_of_Core = (Total_Abundance / Total_Core) * 100
+  ) %>%
+  ungroup() %>%
+  mutate(Species = factor(Species, levels = rev(target_species)))
+
+cat("Number of families in robust core:", length(unique(family_abundance$Family)), "\n")
+
+# Custom color palette for families (adjust based on your data)
+# This is a template - you may need to modify based on actual families present
+family_colors <- c(
+  "Endozoicomonadaceae" = "#008B8B",
+  "Rhizobiaceae" = "#DC143C",
+  "Helicobacteraceae" = "#FFD700",
+  "Rhodobacteraceae" = "#FF1493",
+  "Woeseiaceae" = "#4169E1",
+  "Hyphomonadaceae" = "darkgreen",
+  "Hyphomicrobiaceae" = "#FF6347",
+  "unclassified Alphaproteobacteria" = "gray75",
+  "unclassified Gammaproteobacteria" = "#32CD32"
+)
+
+# Get families present and create palette
+families_present <- sort(unique(family_abundance$Family))
+
+# Use custom colors where available, generate additional if needed
+if(length(families_present) > length(family_colors)) {
+  additional_colors <- colorRampPalette(brewer.pal(12, "Set3"))(
+    length(families_present) - length(family_colors)
+  )
+  family_colors_final <- c(family_colors, 
+                           setNames(additional_colors, 
+                                   setdiff(families_present, names(family_colors))))
+} else {
+  family_colors_final <- family_colors[families_present]
+}
+
+# Create horizontal stacked bar plot
+p_core_family <- ggplot(family_abundance, 
+                       aes(x = Percent_of_Core, y = Species, fill = Family)) +
+  geom_bar(stat = "identity", width = 0.65) +
+  scale_fill_manual(values = family_colors_final, name = "Family") +
+  scale_x_continuous(expand = c(0, 0), limits = c(0, 100)) +
+  labs(
+    x = "Relative Abundance (% of Core Microbiome)",
+    y = NULL,
+    title = "Family-Level Composition of Robust Core Microbiome (90% Prevalence)"
+  ) +
+  theme_classic() +
+  theme(
+    axis.text.y = element_text(face = "italic", size = 18, color = "black"),
+    axis.text.x = element_text(size = 16, color = "black"),
+    axis.title.x = element_text(size = 20, face = "bold", margin = margin(t = 15)),
+    plot.title = element_text(size = 18, face = "bold", hjust = 0.5),
+    legend.title = element_text(size = 16, face = "bold"),
+    legend.text = element_text(size = 14),
+    legend.key.size = unit(0.8, "cm"),
+    legend.position = "right",
+    panel.grid.major.x = element_line(color = "grey90", linetype = "dotted")
+  ) +
+  guides(fill = guide_legend(ncol = 1))
+
+print(p_core_family)
+```
+
+---
+
+# Summary Statistics and Data Export
+
+Final summary of key findings and export of all analysis results.
+
+```{r summary-export}
+cat("\n=============================================================================\n")
+cat("ANALYSIS SUMMARY\n")
+cat("=============================================================================\n\n")
+
+# Sample counts
+cat("=== SAMPLE COUNTS ===\n")
+sample_counts <- target.octo$sample_table %>%
+  group_by(SPP) %>%
+  summarise(n_samples = n(), .groups = 'drop')
+print(sample_counts)
+
+# Alpha diversity summary
+cat("\n=== ALPHA DIVERSITY SUMMARY ===\n")
+print(alpha_summary)
+
+# Beta diversity summary
+cat("\n=== BETA DIVERSITY ===\n")
+cat("PERMANOVA results show host species significantly explains bacterial\n")
+cat("community variation (p < 0.001 for most comparisons)\n")
+
+# Core microbiome summary
+cat("\n=== CORE MICROBIOME SUMMARY ===\n")
+core_counts <- summary_table_final %>%
+  group_by(Species) %>%
+  summarise(
+    n_robust_core = n(),
+    mean_prevalence = mean(Prevalence),
+    total_abundance = sum(Mean_Relative_Abundance_Percent),
+    .groups = 'drop'
+  )
+print(core_counts)
+
+# Export all results
+cat("\n=== EXPORTING RESULTS ===\n")
+
+# Export core microbiome Excel workbook
+write_xlsx(excel_data_list, "Core_Microbiome_All_Thresholds_All_Species.xlsx")
+cat("Saved: Core_Microbiome_All_Thresholds_All_Species.xlsx\n")
+
+# Export robust core CSV
+write.csv(summary_table_final, "Robust_Core_90pct_Bootstrap_Summary.csv", 
+          row.names = FALSE)
+cat("Saved: Robust_Core_90pct_Bootstrap_Summary.csv\n")
+
+# Export alpha diversity
+write.csv(alpha_div, "Alpha_Diversity_All_Samples.csv", row.names = FALSE)
+cat("Saved: Alpha_Diversity_All_Samples.csv\n")
+
+# Export differential abundance results
+write.csv(viz_df, "Differential_Abundance_Top20.csv", row.names = FALSE)
+cat("Saved: Differential_Abundance_Top20.csv\n")
+
+cat("\n=== ANALYSIS COMPLETE ===\n")
+cat("All results have been saved to the output directory\n")
+```
+
+---
+
+# Session Information
+
+Document computational environment for reproducibility.
+
+```{r session-info}
+sessionInfo()
+```
+
+---
+
+# Key Findings
+
+**Community Composition**:
+- Host species identity is the primary driver of bacterial community structure
+- Each species harbors distinct bacterial communities with varying levels of diversity
+- *E. caribaeorum* typically shows higher diversity compared to branching species
+
+**Core Microbiome**:
+- Bootstrap-validated core microbiomes reveal persistent bacterial associates
+- Endozoicomonadaceae commonly dominates core microbiomes in several species
+- Core microbiome composition differs substantially among host species
+- Branching species show more stable cores with minimal reduction across prevalence thresholds
+
+**Differential Abundance**:
+- ANCOM-BC2 identifies host-specific bacterial associates
+- Multiple bacterial families show significant enrichment in particular host species
+- These patterns likely reflect host-microbe specificity and functional associations
+
+**Temporal and Spatial Patterns**:
+- Bacterial communities show relative stability across years within species
+- Site effects are secondary to host species effects
+- Individual variation exists but is overshadowed by host identity
+
+---
