@@ -1,0 +1,196 @@
+---
+title: "Florida Site Map"
+author: "Matías Gómez-Corrales"
+date: "`r Sys.Date()`"
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+    toc_depth: 3
+    code_folding: show
+    theme: united
+---
+# 1. Load packages
+
+```{r}
+if(!require("pacman")) install.packages("pacman")
+pacman::p_load(ggplot2, maps, tidyverse, ggspatial, ggrepel)
+```
+
+# 2.  Sites Coordinates
+
+
+```{r}
+sites <- tibble(
+Site  = c("DC1", "DC3", "BC4", "BC6"),
+Name  = c("Miami Shallow", "Miami Deep", "Broward Shallow", "Broward Deep"),
+Lat   = c(25.8427667, 25.8429167, 26.18067, 26.08916),
+Lon   = c(-80.1039667, -80.0879667, -80.04103, -80.05356),
+Depth = c("Shallow", "Deep", "Shallow", "Deep")
+)
+
+```
+
+# 3. Symbol Offsets and Label Nudging
+
+```{r}
+sites <- sites %>%
+mutate(
+# Offset only Miami sites horizontally
+Lon_sym = case_when(
+Site == "DC1" ~ Lon - 0.06,
+Site == "DC3" ~ Lon + 0.06,
+TRUE ~ Lon
+),
+Lat_sym = Lat,
+
+
+# Label nudges
+label_nudge_x = case_when(
+  Site == "DC1" ~ -0.20,   # Miami Shallow left
+  Site %in% c("BC4", "BC6") ~ 0.28,  # Broward to the right
+  TRUE ~ 0
+),
+label_nudge_y = 0.06)
+
+```
+
+
+
+# 4. City Reference Data
+
+```{r}
+cities <- tibble(
+City = c("Miami", "West Palm Beach"),
+Lat  = c(25.761536, 26.7056),
+Lon  = c(-80.191483, -80.0364)
+) %>%
+mutate(
+label_nudge_x = 0,
+label_nudge_y = if_else(City == "Miami", -0.2, 0)
+)
+
+```
+
+# 5. Base Map
+
+```{r}
+world_map <- map_data("world")
+
+base_map <- ggplot() +
+geom_polygon(
+data = world_map,
+aes(x = long, y = lat, group = group),
+fill = "gray90", color = "gray60"
+) +
+coord_quickmap(xlim = c(-83, -79), ylim = c(24.4, 30), expand = FALSE) +
+theme_minimal() +
+theme(
+panel.background = element_rect(fill = "deepskyblue", color = NA),
+panel.grid.major = element_line(color = "white"),
+panel.grid.minor = element_blank()
+)
+
+base_map
+
+```
+
+# 6. Final Map
+
+```{r}
+map_plot <- base_map +
+
+# Connection lines
+
+geom_segment(
+data = sites,
+aes(x = Lon, y = Lat, xend = Lon_sym, yend = Lat_sym),
+linewidth = 0.5
+) +
+
+# Site points
+
+geom_point(
+data = sites,
+aes(x = Lon_sym, y = Lat_sym, fill = Depth, shape = Depth),
+size = 4.5, alpha = 0.9, color = "black"
+) +
+
+# Site labels
+
+geom_text_repel(
+data = sites,
+aes(x = Lon_sym, y = Lat_sym, label = Name),
+nudge_x = sites$label_nudge_x,
+nudge_y = sites$label_nudge_y,
+size = 4.5,
+segment.color = NA
+) +
+
+# City points
+
+geom_point(
+data = cities,
+aes(x = Lon, y = Lat),
+size = 2.8
+) +
+
+# City labels
+
+geom_text_repel(
+data = cities,
+aes(x = Lon, y = Lat, label = City),
+nudge_x = cities$label_nudge_x,
+nudge_y = cities$label_nudge_y,
+size = 4,
+fontface = "italic",
+segment.color = "gray40"
+) +
+
+# Styling
+
+scale_fill_manual(values = c("Shallow" = "limegreen", "Deep" = "firebrick")) +
+scale_shape_manual(values = c("Shallow" = 21, "Deep" = 24)) +
+
+annotation_north_arrow(
+location = "tr", which_north = "grid",
+pad_x = unit(0.5, "cm"), pad_y = unit(0.5, "cm"),
+style = north_arrow_fancy_orienteering()
+) +
+
+guides(fill = "none", shape = "none") +
+
+theme(
+axis.title = element_text(size = 16),
+axis.text  = element_text(size = 14),
+plot.margin = margin(5, 5, 5, 5, "pt")
+)
+
+map_plot
+
+```
+
+# 7. Export Figures (Portable Paths)
+
+```{r, eval=FALSE}
+output_dir <- "figures"
+if (!dir.exists(output_dir)) dir.create(output_dir)
+
+ggsave(
+file.path(output_dir, "map_site_plot_v4.pdf"),
+map_plot,
+width = 24, height = 22, units = "cm",
+dpi = 600, bg = "white"
+)
+
+ggsave(
+file.path(output_dir, "map_site_plot_v4.png"),
+map_plot,
+width = 24, height = 22, units = "cm",
+dpi = 600, bg = "white"
+)
+
+```
+
+
+
