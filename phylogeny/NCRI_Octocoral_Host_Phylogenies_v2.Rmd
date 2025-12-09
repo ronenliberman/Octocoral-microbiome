@@ -1,0 +1,167 @@
+---
+title: "NCRI Octocoral Host Phylogenies"
+author: "Matias Gomez"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    theme: flatly
+    toc: true
+    toc_depth: 4
+    toc_float: true
+---
+
+# 1. Overview
+
+This document performs mitochondrial mtMutS phylogenetic inference using IQ TREE and visualization using ggtree for:
+
+Briareum asbestinum
+
+Eunicea caribaeorum
+
+Eunicea flexuosa
+
+Muricea muricata
+
+# 2. Load R Packages
+
+```{r}
+if (!requireNamespace("BiocManager", quietly = TRUE))
+install.packages("BiocManager")
+
+required_pkgs <- c("ggtree", "ape", "ggplot2", "patchwork")
+
+for (pkg in required_pkgs) {
+if (!require(pkg, character.only = TRUE)) {
+BiocManager::install(pkg, ask = FALSE)
+library(pkg, character.only = TRUE)
+}
+}
+```
+
+# 3. Define Base Directory (EDIT THIS ON YOUR MACHINE)
+
+This single line controls all file paths:
+
+```{r}
+base_dir <- "~/Desktop/NCRI_Octocoral_ID_2025/Octocoral_Host_ID_Clean_Sequences/mtMuts"
+```
+
+
+# 4. Function for Loading, Rooting, Renaming, and Plotting Trees
+
+```{r}
+process_tree <- function(tree_file, annotation_file, outgroup, title_expr, xlim_val) {
+
+tree <- read.tree(tree_file)
+tree_rooted <- root(tree, outgroup = outgroup, resolve.root = TRUE)
+
+annotation <- read.delim(annotation_file, header = TRUE, stringsAsFactors = FALSE)
+
+tree_rooted$tip.label <- annotation$new_label[
+match(tree_rooted$tip.label, annotation$old_label)
+]
+
+tree_rooted$node.label[1] <- NA
+
+p <- ggtree(tree_rooted, size = 1.2) +
+geom_tippoint(shape = 21, size = 3, fill = "black") +
+geom_tiplab(size = 7, hjust = -0.1, fontface = "italic") +
+geom_nodelab(aes(label = label), size = 8, hjust = 2, vjust = 0) +
+theme_tree2() +
+ggtitle(title_expr) +
+xlab("Number of nucleotide substitutions") +
+xlim(0, xlim_val) +
+theme(
+axis.text.x = element_text(size = 18),
+axis.title.x = element_text(size = 18, face = "bold"),
+plot.title = element_text(size = 20, face = "bold", hjust = 0.5)
+)
+
+return(p)
+}
+
+```
+
+
+# 5. Generate All Four Trees
+
+```{r, eval=TRUE}
+BAST_tree <- process_tree(
+tree_file = file.path(base_dir, "BAST/BAST_mtMuts_IQTREE_Output/BAST_mtMuts_IQtree.contree"),
+annotation_file = file.path(base_dir, "BAST/BAST_mtMuts_Alignments/BAST_mtMuts_Annotation_file.txt"),
+outgroup = "NC_062000.1",
+title_expr = expression(bolditalic("B. asbestinum") ~ bold(" mtMutS (801 bp) IQ TREE tree")),
+xlim_val = 0.005
+)
+
+BAST_tree
+
+ECAR_tree <- process_tree(
+tree_file = file.path(base_dir, "ECAR/ECAR_mtMuts_IQTREE_Output/ECAR_mtMuts_IQtree.contree"),
+annotation_file = file.path(base_dir, "ECAR/ECAR_mtMuts_Alignments/ECAR_mtMuts_Annotation_file.txt"),
+outgroup = "NC_073493.1",
+title_expr = expression(bolditalic("E. caribaeorum") ~ bold(" mtMutS (744 bp) IQ TREE tree")),
+xlim_val = 0.16
+)
+
+ECAR_tree
+
+EFLE_tree <- process_tree(
+tree_file = file.path(base_dir, "EFLE/EFLE_mtMuts_IQTREE_Output/EFLE_mtMuts_IQtree.contree"),
+annotation_file = file.path(base_dir, "EFLE/EFLE_mtMuts_Alignments/EFLE_mtMuts_Annotation_file.txt"),
+outgroup = "GQ342524.1",
+title_expr = expression(bolditalic("E. flexuosa") ~ bold(" mtMutS (734 bp) IQ TREE tree")),
+xlim_val = 0.01
+)
+
+EFLE_tree
+
+MMUR_tree <- process_tree(
+tree_file = file.path(base_dir, "MMUR/MMUR_mtMuts_IQTREE_Output/MMUR_mtMuts_IQtree.contree"),
+annotation_file = file.path(base_dir, "MMUR/MMUR_mtMuts_Alignments/MMUR_mtMuts_Annotation_file.txt"),
+outgroup = "OZ247669.1_17312-18118",
+title_expr = expression(bolditalic("M. muricata") ~ bold(" mtMutS (766 bp) IQ TREE tree")),
+xlim_val = 0.05
+)
+
+MMUR_tree
+
+```
+
+# 6. Merge into 2 × 2 Panel
+
+```{r}
+mtMuts_panel <- (BAST_tree + ECAR_tree) /
+(EFLE_tree + MMUR_tree) +
+plot_annotation(
+tag_levels = "a",
+tag_suffix = ")",
+theme = theme(
+plot.tag = element_text(size = 40, face = "bold"),
+plot.margin = margin(20, 20, 20, 20)
+)
+) & theme(
+plot.tag.position = c(0, 1),
+plot.margin = margin(20, 20, 20, 20)
+)
+
+mtMuts_panel
+
+```
+
+# 7. Save Final Figure
+
+```{r, eval=FALSE}
+ggsave(
+"mtMuts_4panel_final.pdf",
+mtMuts_panel,
+width = 90,
+height = 60,
+units = "cm",
+dpi = 600,
+limitsize = FALSE,
+bg = "white"
+)
+
+```
+
