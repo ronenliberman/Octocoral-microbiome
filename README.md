@@ -2,52 +2,79 @@
 
 ## Project Description
 
-This project characterizes the bacterial microbiomes of four octocoral species from southeastern Florida using 16S rRNA amplicon sequencing. We investigate host-specificity, temporal stability, and core microbiome composition in *Briareum asbestinum*, *Erythropodium caribaeorum*, *Eunicea flexuosa*, and *Muricea muricata* collected from reef sites across multiple years (2023-2025).
-
-### Research Questions
-
-- **How do bacterial communities differ among octocoral host species?**
-- **What bacterial taxa constitute the persistent "core microbiome" of each species?**
-- **How stable are these microbiomes across temporal and spatial scales?**
-- **Do morphological differences (encrusting vs. branching) influence microbiome structure?**
-
-### Key Findings
-
-✅ **Host species identity** is the primary driver of bacterial community structure  
-✅ **Species-specific core microbiomes** identified through bootstrap-validated prevalence analysis  
-✅ **High temporal stability** of microbiomes across multiple years  
-✅ **Distinct patterns** between encrusting and branching morphotypes
+This repository contains the revised manuscript analysis workflow for the Florida octocoral microbiome project. The analysis focuses on bacterial community structure, core microbiomes, differential abundance testing, and targeted phylogenetic investigations of dominant symbionts in four octocoral host species.
 
 ### Study System
 
-**Location**: Broward County and Deerfield Beach reef sites, southeastern Florida, USA  
-**Sample Period**: 2023-2025  
-**Sample Size**: 200+ octocoral samples + seawater controls  
-**Sequencing**: Illumina MiSeq 2x300bp, 16S rRNA V4 region  
-**Analysis**: Comprehensive microbiome pipeline with statistical validation
+- **Location**: Broward County and Deerfield Beach reef sites, southeastern Florida, USA
+- **Study Period**: 2023-2025
+- **Hosts**: *Briareum asbestinum*, *Erythropodium caribaeorum*, *Eunicea flexuosa*, *Muricea muricata*
+- **Sample Types**: Octocoral samples and seawater controls
+- **Sites**: BC4, BC6, DC1, DC3
+- **Sequencing**: Illumina MiSeq 2x300bp, 16S rRNA V4 region
+- **Taxonomy**: SILVA 138.2
 
-### Analytical Approach
+## Revision Update
 
-This repository provides a complete reproducible workflow including:
+The repository has been updated with the new R scripts from the manuscript revision source folder. These updated scripts now support the current revision workflow and are reflected in this README.
 
-1. **Diversity Analysis** - Alpha and beta diversity across host species
-2. **Differential Abundance Testing** - ANCOM-BC2 to identify host-specific associates
-3. **Core Microbiome Identification** - Bootstrap-validated prevalence analysis
-4. **Temporal Patterns** - Species-specific ordinations across years and sites
-5. **Publication-Quality Outputs** - High-resolution figures and comprehensive data tables
+## Repository Contents
 
-### Repository Contents
+```
+Octocoral-microbiome/
+├── .git/
+├── LICENSE
+├── Octocoral-microbiome.Rproj
+├── Octocoral_Manuscript_Revision_Analysis_Knowledge.md
+├── README.md
+├── maps/
+├── phylogeny/
+├── raw files/
+├── output/
+├── script/
+│   ├── Octocoral_Microbiome_Comprehensive_Analysis.Rmd
+│   ├── README.md
+│   └── RarefactionCurve_Jun24_Oct24run.png
+├── Community compsition ASV_top 20 percent per sample_MARCH17.R
+├── Core_Microbiome_Revised_AllThresholds.R
+├── Endozoicomonas_Phylogenetic_Analysis_CLEAN.R
+├── Endozoicomonas_Phylogenetic_Analysis_FINAL.R
+├── Figure4_species_ANCOMBC.R
+├── Mycoplasma_Phylogenetic_Analysis.R
+├── NCBI_BLAST_unclassified_ASVs_localBLAST.R
+├── Octocoral_Revised_Analysis_COMPLETE.R
+└── Supplementary_Materials.R
+```
 
-- **`script/`** - Complete R markdown analysis pipeline
-- **`raw data/`** - QIIME2 artifacts and sample metadata
-- **`output/`** - Analysis results, figures, and data tables
-- **Documentation** - Detailed methods and usage instructions
+## Analysis Workflow
 
-### Citation
+The new revision scripts include the following core components:
 
-If you use this code or data in your research, please cite:
+- Data import, filtering, and QC
+- Alpha and beta diversity statistics
+- Multi-threshold core microbiome analysis
+- Bootstrap validation of the 90% core
+- ANCOM-BC2 differential abundance testing
+- Targeted phylogenetic analysis for *Endozoicomonas* and *Mycoplasma*
 
-> Liberman, Ronen, Matías Gómez-Corrales, and Lopez, Jose Victor (2025). Host-specific bacterial microbiomes in four octocoral species from southeastern Florida. PrePrint
+## How to Run
+
+### Option 1: Open in RStudio
+1. Open `script/Octocoral_Microbiome_Comprehensive_Analysis.Rmd`
+2. Update local file paths if necessary
+3. Knit to generate the full analysis report
+
+### Option 2: Render from the command line
+
+```r
+Rscript -e "rmarkdown::render('script/Octocoral_Microbiome_Comprehensive_Analysis.Rmd')"
+```
+
+## Notes
+
+- `Octocoral_Manuscript_Revision_Analysis_Knowledge.md` contains the revision rationale and analysis decisions.
+- The new root-level R scripts are the updated revision code.
+- If you want the revision scripts moved into `script/` for consistency, I can do that.
 
 ---
 
@@ -55,6 +82,4 @@ If you use this code or data in your research, please cite:
 **Laboratory**: Joe Lopez Lab, Nova Southeastern University  
 **Contact**: rliberma@nova.edu  
 
-
-
-**Status**: Manuscript in preparation
+**Status**: Manuscript revision in progress
