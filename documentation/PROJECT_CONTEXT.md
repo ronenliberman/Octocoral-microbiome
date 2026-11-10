@@ -90,14 +90,30 @@ See `RULES.md`. The ones most likely to be questioned again:
 
 ## 6. Open items
 
-- **Table 2 permutations.** `Octocoral_Revised_Analysis_COMPLETE.R` runs
-  PERMANOVA with 999 permutations. The published Table 2 footnote says 9,999.
-  With 9,999 the p-values would be: Species 0.0001; Year 0.0002–0.0004 (\*\*\*
-  instead of \*\*); Site 0.003–0.005; Species × Site 0.0001–0.0002 (\*\*\*
-  instead of \*\*). Decide whether the script or the footnote is the record.
+- **Table 2 permutations (decided 10 Nov 2026: 9,999).** The script had used
+  999 and built Table 2 from model objects it never created; it now fits the two
+  Table 2 models with 9,999 permutations (seed 123). See section 7 for the values.
 - `17_Fig2_y_axis_title.R` starts from a GIMP-assembled Figure 2, so Figure 2
   cannot be rebuilt from code alone.
 - `Supplementary_Materials.R` and the community-composition script need objects
   from `Octocoral_Revised_Analysis_COMPLETE.R` in memory; they are not
   standalone.
 - Package versions are not pinned (`renv`).
+
+## 7. Table 2 with 9,999 permutations (10 Nov 2026)
+
+`Octocoral_Revised_Analysis_COMPLETE.R` section 5D, seed 123. Df, sums of
+squares, R² and F are unchanged from the published table; the p-values are:
+
+| Term | P (9,999) | | Published proof P |
+|---|---|---|---|
+| Species | 0.0001 | \*\*\* | .001 \*\*\* |
+| Year | 0.0002 | \*\*\* | .002 \*\* |
+| Species × year | 0.0615 | ns | .06 |
+| Site | 0.0039 | \*\* | .002 \*\* |
+| Species × site | 0.0002 | \*\*\* | .002 \*\* |
+
+The proof's Table 2 and the Results sentence quoting it ("Year … P < .01",
+"species × site … P < .01") were corrected to these values at the proof stage.
+Before this change the Table 2 block read model objects (`permanova_clr_spp_*`,
+`permanova_spp_*`) that the script never created; it now uses the 5D models.
