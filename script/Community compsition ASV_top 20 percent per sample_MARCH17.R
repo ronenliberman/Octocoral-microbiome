@@ -9,7 +9,7 @@ library(microeco)
 library(RColorBrewer)
 library(cowplot)
 
-output_dir <- file.path("~/Postdocing_NSU/JOE LOPEZ Lab/Manuscript/Revision/Output")
+output_dir <- file.path(here::here(), "output")
 
 
 # =============================================================================

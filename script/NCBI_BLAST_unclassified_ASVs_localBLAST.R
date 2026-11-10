@@ -31,8 +31,8 @@ library(Biostrings)
 library(rentrez)     # for fetching taxonomy from TaxIDs
 library(XML)
 
-setwd("~/Postdocing_NSU/JOE LOPEZ Lab/Manuscript/Revision/")
-output_dir <- file.path("~/Postdocing_NSU/JOE LOPEZ Lab/Manuscript/Revision/Output")
+setwd(here::here())   # repository root (found by the .Rproj file)
+output_dir <- file.path(here::here(), "output")
 dir.create(output_dir, showWarnings = FALSE, recursive = TRUE)
 
 set.seed(123)
@@ -51,13 +51,13 @@ BLAST_THREADS <- 4
 cat("=== Loading data ===\n")
 
 data <- qiime2meco(
-  "raw_data/table-NoEMC-PEE2.qza",
-  taxonomy_table = "raw_data/taxonomy-PEE2.qza",
-  sample_table   = "raw_data/metadata_all_edited.csv",
+  "raw files/table-NoEMC-PEE2.qza",
+  taxonomy_table = "raw files/taxonomy-PEE2.qza",
+  sample_table   = "raw files/metadata_all_edited.csv",
   auto_tidy      = TRUE
 )
 
-rep_seqs <- readDNAStringSet("raw_data/dna-sequences-PEE2.fasta")
+rep_seqs <- readDNAStringSet("raw files/dna-sequences-PEE2.fasta")
 
 d <- clone(data)
 d$tax_table %<>% base::subset(Kingdom == "k__Archaea" | Kingdom == "k__Bacteria")

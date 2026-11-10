@@ -1,0 +1,33 @@
+name: No AI attribution
+
+# Fails a pull request that credits an AI tool in its branch name, its commit
+# messages, its title or body, or in the lines it adds to source and prose files.
+# Branch names are the reason this check exists: GitHub records the head branch
+# name in a pull request permanently, and nobody can edit it afterward.
+#
+# The scan itself is in tools/check-attribution.sh, which .githooks/pre-push
+# also runs, so the rule is defined once and the two cannot drift apart.
+
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, edited, reopened, synchronize]
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check branch name, commits, title, body, and added lines
+        env:
+          HEAD_REF: ${{ github.head_ref }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          PR_BODY: ${{ github.event.pull_request.body }}
+        run: |
+          printf '%s\n%s' "$PR_TITLE" "$PR_BODY" \
+            | bash tools/check-attribution.sh "$HEAD_REF" "$BASE_SHA..$HEAD_SHA"

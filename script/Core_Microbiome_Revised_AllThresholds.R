@@ -8,6 +8,7 @@
 
 # --- PACKAGES ----------------------------------------------------------------
 library(microeco)
+library(file2meco)   # qiime2meco(); needed when run in a fresh session
 library(qiime2R)
 library(tidyverse)
 library(magrittr)
@@ -21,9 +22,9 @@ library(gridExtra)
 set.seed(123)
 
 # --- Adjust this path to your working directory ---
-setwd("~/Postdocing_NSU/JOE LOPEZ Lab/Manuscript/Revision/")
+setwd(here::here())   # repository root (found by the .Rproj file)
 # --- OUTPUT DIRECTORY --------------------------------------------------------
-output_dir <- "~/Postdocing_NSU/JOE LOPEZ Lab/Manuscript/Revision/Output"
+output_dir <- file.path(here::here(), "output")
 if (!dir.exists(output_dir)) dir.create(output_dir, recursive = TRUE)
 
 # =============================================================================
@@ -32,9 +33,9 @@ if (!dir.exists(output_dir)) dir.create(output_dir, recursive = TRUE)
 
 # Import QIIME2 data
 data <- qiime2meco(
-  "raw_data/table-NoEMC-PEE2.qza",
-  taxonomy_table = "raw_data/taxonomy-PEE2.qza",
-  sample_table   = "raw_data/metadata_all_edited.csv",
+  "raw files/table-NoEMC-PEE2.qza",
+  taxonomy_table = "raw files/taxonomy-PEE2.qza",
+  sample_table   = "raw files/metadata_all_edited.csv",
   auto_tidy      = TRUE
 )
 

@@ -35,8 +35,8 @@ library(RColorBrewer)
 library(magrittr)
 library(scales)
 
-setwd("~/Postdocing_NSU/JOE LOPEZ Lab/Manuscript/Revision/")
-output_dir <- file.path("~/Postdocing_NSU/JOE LOPEZ Lab/Manuscript/Revision/Output")
+setwd(here::here())   # repository root (found by the .Rproj file)
+output_dir <- file.path(here::here(), "output")
 dir.create(output_dir, showWarnings = FALSE, recursive = TRUE)
 set.seed(123)
 
@@ -65,9 +65,9 @@ species_list <- c("B. asbestinum", "E. caribaeorum", "E. flexuosa", "M. muricata
 cat("\n=== SECTION 1: Loading and filtering data ===\n")
 
 data <- qiime2meco(
-  "raw_data/table-NoEMC-PEE2.qza",
-  taxonomy_table = "raw_data/taxonomy-PEE2.qza",
-  sample_table = "raw_data/metadata_all_edited.csv",
+  "raw files/table-NoEMC-PEE2.qza",
+  taxonomy_table = "raw files/taxonomy-PEE2.qza",
+  sample_table = "raw files/metadata_all_edited.csv",
   auto_tidy = TRUE
 )
 
@@ -565,7 +565,7 @@ for (spp in species_list) {
   spp_data$sample_table$Year <- as.factor(spp_data$sample_table$Year)
   spp_data$sample_table$Site <- factor(spp_data$sample_table$Site,
                                        levels = c("BC4", "BC6", "DC1", "DC3"),
-                                       labels = c("Deerfield Shallow", "Deerfield Deep", "Miami Shallow", "Miami Deep")
+                                       labels = c("Broward Shallow", "Broward Deep", "Miami Shallow", "Miami Deep")
   )
   spp_data$tidy_dataset()
   
@@ -880,7 +880,7 @@ print(top_global_sig %>% dplyr::select(clean_tax, min_p_adj, max_abs_lfc))
 # --- 6B: Cross-reference with NCBI BLAST ---
 cat("\n--- 6B: NCBI BLAST cross-reference ---\n")
 
-ncbi_blast_file <- file.path(output_dir, "NCBI_BLAST_poorly_classified_ASVs_summary.csv")
+ncbi_blast_file <- file.path(here::here(), "blast", "NCBI_BLAST_poorly_classified_ASVs_summary.csv")
 if (file.exists(ncbi_blast_file)) {
   ncbi_blast <- read.csv(ncbi_blast_file, stringsAsFactors = FALSE)
   
@@ -1306,10 +1306,10 @@ for (spp in species_list) {
   print(p)
   
   spp_filename <- gsub("\\. ", "_", spp)
-  ggsave(
-    file.path(output_dir, paste0("Community_composition_ASV_", spp_filename, ".png")),
-    p, dpi = 300, width = 14, height = 7, bg = "white"
-  )
+  #ggsave(
+   # file.path(output_dir, paste0("Community_composition_ASV_", spp_filename, ".png")),
+    #p, dpi = 300, width = 14, height = 7, bg = "white"
+  #)
   cat("  Saved:", paste0("Community_composition_ASV_", spp_filename, ".png"), "\n")
 }
 
@@ -1395,7 +1395,7 @@ build_species_composition <- function(mt_TSS_obj, species_name, site_levels, sit
 }
 
 site_levels <- c("BC4", "BC6", "DC1", "DC3")
-site_labels <- c("Deerfield Shallow", "Deerfield Deep", "Miami Shallow", "Miami Deep")
+site_labels <- c("Broward Shallow", "Broward Deep", "Miami Shallow", "Miami Deep")
 
 all_df <- bind_rows(
   build_species_composition(mt_TSS, "B. asbestinum", site_levels, site_labels),
@@ -1429,7 +1429,7 @@ sample_order <- plot_df %>%
 plot_df$Sample <- factor(plot_df$Sample, levels = sample_order)
 
 # Year_Site faceting
-site_short <- c("Deerfield Shallow"="DfS", "Deerfield Deep"="DfD",
+site_short <- c("Broward Shallow"="BrS", "Broward Deep"="BrD",
                 "Miami Shallow"="MiS", "Miami Deep"="MiD")
 
 plot_df <- plot_df %>%
@@ -1437,9 +1437,9 @@ plot_df <- plot_df %>%
          Year_Site = paste0(Year, " - ", Site_short))
 
 year_site_order <- c(
-  "2023 - DfS","2023 - DfD","2023 - MiS","2023 - MiD",
-  "2024 - DfS","2024 - DfD","2024 - MiS","2024 - MiD",
-  "2025 - DfS","2025 - DfD","2025 - MiS","2025 - MiD"
+  "2023 - BrS","2023 - BrD","2023 - MiS","2023 - MiD",
+  "2024 - BrS","2024 - BrD","2024 - MiS","2024 - MiD",
+  "2025 - BrS","2025 - BrD","2025 - MiS","2025 - MiD"
 )
 plot_df$Year_Site <- factor(plot_df$Year_Site, levels = year_site_order)
 
@@ -1586,10 +1586,10 @@ final_figure <- plot_grid(
 print(final_figure)
 
 ggsave(
-  file.path(output_dir, "Figure2_combined_final.png"),
-  final_figure, dpi = 300, width = 22, height = 18, bg = "white"
+  file.path(output_dir, "Figure2_combined_final_revision2.png"),
+  final_figure, dpi = 600, width = 22, height = 18, bg = "white"
 )
-cat("Saved: Figure2_combined_final.png\n")
+cat("Saved: Figure2_final_revision2.png\n")
 
 cat("Section 10 complete.\n")
 # =============================================================================
@@ -1621,7 +1621,7 @@ panel_B_plot <- p_pcoa_clr + theme(legend.position = "none")
 pcoa_legend <- get_legend(
   p_pcoa_clr +
     guides(
-      color = guide_legend(override.aes = list(size = 3.5), title = "Species", nrow = 2),
+      color = guide_legend(override.aes = list(size = 3.5), title = "Species", nrow = 1),
       shape = guide_legend(override.aes = list(size = 3.5), title = "Year", nrow = 1)
     ) +
     theme(
@@ -1629,6 +1629,7 @@ pcoa_legend <- get_legend(
       legend.title = element_text(size = 9, face = "bold"),
       legend.position = "bottom",
       legend.box = "vertical",
+      legend.direction = "horizontal",
       legend.margin = margin(0, 0, 0, 0),
       legend.spacing.y = unit(0.1, "cm")
     )
@@ -1643,7 +1644,8 @@ panel_B <- plot_grid(
 # --- Panel C: Observed Richness (compact) ---
 panel_C <- p_richness +
   theme(
-    axis.text.x = element_text(size = 8, face = "italic", color = "black"),
+    axis.text.x = element_text(size = 8, face = "italic", color = "black",
+                               angle = 45, hjust = 1),
     axis.title.y = element_text(size = 10, face = "bold"),
     axis.text.y = element_text(size = 8),
     plot.margin = margin(5, 5, 5, 5)
@@ -1719,14 +1721,14 @@ print(final_figure_v2)
 
 # A4 = 8.27 x 11.69 inches, with margins ~7.5 x 10.5 usable
 ggsave(
-  file.path(output_dir, "Figure2_combined_final_v2.png"),
-  final_figure_v2, dpi = 300, width = 12.5, height = 13.5, bg = "white"
+  file.path(output_dir, "Figure2_combined_final_v2_revision2.png"),
+  final_figure_v2, dpi = 600, width = 12.5, height = 13.5, bg = "white"
 )
-cat("Saved: Figure2_combined_final_v2.png\n")
+cat("Saved: Figure2_combined_final_v2_revision2.png\n")
 
 # Also save as PDF for journal submission
 ggsave(
-  file.path(output_dir, "Figure2_combined_final_v2.pdf"),
+  file.path(output_dir, "Figure2_combined_final_v2_revision2.pdf"),
   final_figure_v2, width = 7.5, height = 10.5, bg = "white"
 )
 cat("Saved: Figure2_combined_final_v2.pdf\n")
@@ -1739,10 +1741,10 @@ cat("Section 10 complete.\n")
 legend_A <- get_legend(
   ggplot(plot_df, aes(x = Sample, y = Abundance, fill = Genus_plot)) +
     geom_bar(stat = "identity") +
-    scale_fill_manual(values = genus_colors_unified, name = "Taxon") +
+    scale_fill_manual(values = genus_colors_unified, name = NULL) +
     guides(fill = guide_legend(nrow = 4, reverse = TRUE)) +
     theme(
-      legend.text       = element_text(size = 14, face = "italic"),
+      legend.text       = element_text(size = 16, face = "italic"),
       legend.key.size   = unit(0.7, "cm"),
       legend.position   = "bottom",
       legend.direction  = "horizontal",
@@ -1756,7 +1758,7 @@ legend_A_plot <- plot_grid(legend_A)
 
 ggsave(
   file.path(output_dir, "Figure2_legend_A_horizontal.png"),
-  legend_A_plot, dpi = 300, width = 14, height = 4, bg = "white"
+  legend_A_plot, dpi = 600, width = 15, height = 6, bg = "white"
 )
 cat("Saved: Figure2_legend_A_composition.png\n")
 
@@ -1828,118 +1830,32 @@ ggsave(
 )
 cat("Saved: Figure2_legend_B_wide.png\n")
 
-
 # =============================================================================
-# SECTION 10: COMBINED FIGURE 2 — v3
-# No legends (blank white space reserved), x-axis labels at 45 degrees
+# EXTRACT PANEL A LEGEND ONLY — standalone export for manual editing
 # =============================================================================
-
-cat("\n=== SECTION 10: Combined Figure 2 v3 ===\n")
-
-library(cowplot)
-
-# --- Panel A: Community composition (no legend) ---
-labeled_comp_plots <- list()
-for (spp in species_list) {
-  label <- ggdraw() + draw_label(spp, fontface = "bold.italic", size = 10, hjust = 0.5)
-  labeled_comp_plots[[spp]] <- plot_grid(label, spp_plots[[spp]], ncol = 1, rel_heights = c(0.07, 1))
-}
-
-panel_A <- plot_grid(
-  plotlist = labeled_comp_plots,
-  ncol = 1,
-  align = "v"
+panel_A_legend_only <- get_legend(
+  ggplot(plot_df, aes(x = Sample, y = Abundance, fill = Genus_plot)) +
+    geom_bar(stat = "identity") +
+    scale_fill_manual(values = genus_colors_unified, name = NULL) +
+    guides(fill = guide_legend(ncol = 5, reverse = TRUE)) +
+    theme(
+      legend.text = element_text(size = 7, face = "italic"),
+      legend.key.size = unit(0.35, "cm"),
+      legend.position = "bottom",
+      legend.justification = "center",
+      legend.spacing.x = unit(0.15, "cm")
+    )
 )
 
-# --- Panel B: PCoA Aitchison (no legend, white space reserved below) ---
-panel_B_plot <- p_pcoa_clr + theme(legend.position = "none")
-
-# White space placeholder the same relative height as the old legend
-panel_B_spacer <- ggdraw()  # empty white canvas
-
-panel_B <- plot_grid(
-  panel_B_plot, panel_B_spacer,
-  ncol = 1,
-  rel_heights = c(1, 0.2)
-)
-
-# --- Panel C: Observed Richness (45-degree x-axis labels) ---
-panel_C <- p_richness +
-  theme(
-    axis.text.x  = element_text(size = 8, face = "italic", color = "black",
-                                angle = 45, hjust = 1, vjust = 1),
-    axis.title.y = element_text(size = 10, face = "bold"),
-    axis.text.y  = element_text(size = 8),
-    plot.margin  = margin(5, 5, 20, 5)
-  )
-
-# --- Panel D: Pielou's Evenness (45-degree x-axis labels) ---
-panel_D <- p_evenness +
-  theme(
-    axis.text.x  = element_text(size = 8, face = "italic", color = "black",
-                                angle = 45, hjust = 1, vjust = 1),
-    axis.title.y = element_text(size = 10, face = "bold"),
-    axis.text.y  = element_text(size = 8),
-    plot.margin  = margin(5, 5, 20, 5)
-  )
-
-# --- Right column: B on top, C and D side by side below ---
-alpha_row <- plot_grid(
-  panel_C, panel_D,
-  ncol = 2,
-  labels = c("C", "D"),
-  label_size = 14,
-  label_fontface = "bold",
-  align = "h"
-)
-
-right_column <- plot_grid(
-  panel_B, alpha_row,
-  ncol = 1,
-  labels = c("B", ""),
-  label_size = 14,
-  label_fontface = "bold",
-  rel_heights = c(1, 0.8)
-)
-
-# --- Left column: A with label ---
-panel_A_labeled <- plot_grid(
-  panel_A,
-  labels = "A",
-  label_size = 14,
-  label_fontface = "bold"
-)
-
-# --- Main body ---
-main_body <- plot_grid(
-  panel_A_labeled, right_column,
-  nrow = 1,
-  rel_widths = c(0.58, 0.42)
-)
-
-# --- Bottom: white space placeholder for composition legend (Panel A legend) ---
-bottom_spacer <- ggdraw()  # blank white — legend added externally
-
-# --- Final assembly ---
-final_figure_v3 <- plot_grid(
-  main_body, bottom_spacer,
-  ncol = 1,
-  rel_heights = c(1, 0.1)
-) +
-  theme(plot.background = element_rect(fill = "white", color = NA))
-
-print(final_figure_v3)
+panel_A_legend_plot <- plot_grid(panel_A_legend_only)
 
 ggsave(
-  file.path(output_dir, "Figure2_combined_final_v3.png"),
-  final_figure_v3, dpi = 300, width = 12.5, height = 13.5, bg = "white"
+  file.path(output_dir, "Figure2_PanelA_legend_only.png"),
+  panel_A_legend_plot, dpi = 600, width = 10, height = 2, bg = "white"
 )
-cat("Saved: Figure2_combined_final_v3.png\n")
-
 ggsave(
-  file.path(output_dir, "Figure2_combined_final_v3.pdf"),
-  final_figure_v3, width = 7.5, height = 10.5, bg = "white"
+  file.path(output_dir, "Figure2_PanelA_legend_only.pdf"),
+  panel_A_legend_plot, width = 10, height = 2, bg = "white"
 )
-cat("Saved: Figure2_combined_final_v3.pdf\n")
+cat("Saved: Figure2_PanelA_legend_only.png/pdf\n")
 
-cat("Section 10 v3 complete.\n")

@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+# Blocks a push that would credit an AI tool, so that the problem is caught here
+# rather than after a pull request exists. A branch name cannot be fixed once a
+# pull request has been opened on it.
+#
+# Enable with:  git config core.hooksPath .githooks
+#
+# The same scan runs on every pull request, so skipping this hook does not
+# get anything past the rule, it only finds out later.
+
+set -uo pipefail
+
+ROOT=$(git rev-parse --show-toplevel)
+CHECK="$ROOT/tools/check-attribution.sh"
+[ -x "$CHECK" ] || [ -f "$CHECK" ] || exit 0
+
+ZERO=$(git hash-object --stdin </dev/null | tr '[:digit:][:alpha:]' '0')
+
+status=0
+while read -r local_ref local_sha remote_ref remote_sha; do
+  # Branch deletion pushes nothing to inspect.
+  [ "$local_sha" = "$ZERO" ] && continue
+
+  branch="${local_ref#refs/heads/}"
+
+  if [ "$remote_sha" = "$ZERO" ]; then
+    # New branch. Compare against main so the range covers only this branch's work.
+    base=$(git merge-base "$local_sha" origin/main 2>/dev/null \
+           || git merge-base "$local_sha" main 2>/dev/null || true)
+    range="${base:+$base..}$local_sha"
+    [ -n "$base" ] || range=""
+  else
+    range="$remote_sha..$local_sha"
+  fi
+
+  bash "$CHECK" "$branch" "$range" </dev/null || status=1
+done
+
+exit $status

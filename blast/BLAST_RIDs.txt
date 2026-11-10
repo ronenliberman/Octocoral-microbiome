@@ -1,0 +1,4 @@
+core_nt BU0RXK4S014
+rRNA_typestrains/16S_ribosomal_RNA BU0V93MG014
+rRNA_typestrains/16S_ribosomal_RNA BUSV0DDA016
+core_nt genus check BUVBU1SW016

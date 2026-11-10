@@ -1,0 +1,167 @@
+IQ-TREE version 3.1.4 for Windows 64-bit built Sep 10 2026
+Developed by Bui Quang Minh, Thomas Wong, Nhan Ly-Trong, Huaiyan Ren
+Contributed by Lam-Tung Nguyen, Dominik Schrempf, Chris Bielow,
+Olga Chernomor, Michael Woodhams, Diep Thi Hoang, Heiko Schmidt
+
+Host:    SHOP5CD420FJPX (AVX2, FMA3, 15 GB RAM)
+Command: C:\Users\rliberma.NSU.000\tools\iqtree-3.1.4-Windows\bin\iqtree3.exe -s Myco_r3_mafft_aligned.fasta -m MFP -B 1000 -alrt 1000 -T AUTO --seed 123 --prefix Myco_r3_iqtree --quiet
+Seed:    123 (Using SPRNG - Scalable Parallel Random Number Generator)
+Time:    Thu Oct 01 00:10:15 2026
+Kernel:  AVX+FMA - auto-detect threads (12 CPU cores detected)
+
+Reading alignment file Myco_r3_mafft_aligned.fasta ... Fasta format detected
+Reading fasta file: done in 0.0003215 secs
+Alignment most likely contains DNA/RNA sequences
+Constructing alignment: done in 0.0009984 secs
+Alignment has 15 sequences with 255 columns, 114 distinct patterns
+79 parsimony-informative, 30 singleton sites, 146 constant sites
+                                   Gap/Ambiguity  Composition  p-value
+Analyzing sequences: done in 6.62e-005 secs
+   1  Myco_1                               1.96%    passed     61.38%
+   2  Myco_3                               1.57%    passed     97.11%
+   3  Myco_2                               1.96%    passed     51.10%
+   4  Myco_4                               1.57%    passed     98.57%
+   5  Myco_5                               1.57%    passed     99.61%
+   6  Myco_6                               1.57%    passed     99.33%
+   7  Myco_7                               1.96%    passed     49.84%
+   8  Myco_8                               1.57%    passed     95.65%
+   9  Myco_9                               1.57%    passed     97.66%
+  10  Myco_10                              1.18%    passed     43.70%
+  11  Myco_16                              1.96%    passed     91.31%
+  12  REF_M_todarodis_5HT                  1.18%    passed     74.76%
+  13  REF_Malacoplasma_iowae_695T          3.92%    passed     72.13%
+  14  REF_M_insons_I17P1T                  1.18%    passed     49.77%
+  15  REF_Acholeplasma_laidlawii_PG_8AT    1.18%    passed     72.29%
+****  TOTAL                                1.73%  0 sequences failed composition chi2 test (p-value<5%; df=3)
+Checking for duplicate sequences: done in 0.0001184 secs
+
+
+Create initial parsimony tree by phylogenetic likelihood library (PLL)... 0.001 seconds
+Measuring multi-threading efficiency up to 12 CPU cores
+Increase to 10 rounds for branch lengths
+2184 trees examined
+Threads: 1 / Time: 12.012 sec / Speedup: 1.000 / Efficiency: 100% / LogL: -1543
+Threads: 2 / Time: 16.152 sec / Speedup: 0.744 / Efficiency: 37% / LogL: -1543
+Determining AUTO threadcount: done in 28.1652 secs using 136.2% CPU
+BEST NUMBER OF THREADS: 1
+
+Perform fast likelihood tree search using GTR+I+G model...
+Estimate model parameters (epsilon = 5.000)
+Perform nearest neighbor interchange...
+Estimate model parameters (epsilon = 1.000)
+1. Initial log-likelihood: -1274.115
+Optimal log-likelihood: -1273.932
+Rate parameters:  A-C: 0.81527  A-G: 2.51257  A-T: 2.50244  C-G: 0.00010  C-T: 4.44229  G-T: 1.00000
+Warning! Some parameters hit the boundaries
+Base frequencies:  A: 0.305  C: 0.162  G: 0.303  T: 0.230
+Proportion of invariable sites: 0.285
+Gamma shape alpha: 0.702
+Parameters optimization took 1 rounds (0.009 sec)
+Time for fast ML tree search: 0.049 seconds
+
+NOTE: ModelFinder requires 1 MB RAM!
+ModelFinder will test up to 968 DNA models (sample size: 255 epsilon: 0.100) ...
+Akaike Information Criterion:           GTR+F+I+G4
+Corrected Akaike Information Criterion: TVM+F+I
+Bayesian Information Criterion:         TVM+I
+Best-fit model: TVM+I chosen according to BIC
+
+All model information printed to Myco_r3_iqtree.model.gz
+CPU time for ModelFinder: 39.875 seconds (0h:0m:39s)
+Wall-clock time for ModelFinder: 29.316 seconds (0h:0m:29s)
+Generating 1000 samples for ultrafast bootstrap (seed: 123)...
+
+NOTE: 0 MB RAM (0 GB) is required!
+Estimate model parameters (epsilon = 0.100)
+1. Initial log-likelihood: -1274.800
+2. Current log-likelihood: -1274.608
+Optimal log-likelihood: -1274.562
+Rate parameters:  A-C: 1.26552  A-G: 4.08378  A-T: 3.21355  C-G: 0.05121  C-T: 4.08378  G-T: 1.00000
+Base frequencies:  A: 0.305  C: 0.162  G: 0.303  T: 0.230
+Proportion of invariable sites: 0.530
+Parameters optimization took 2 rounds (0.003 sec)
+Wrote distance file to... 
+Computing ML distances based on estimated model parameters...
+Calculating distance matrix: done in 0.0003702 secs
+Computing ML distances took 0.000433 sec (of wall-clock time) 0.000000 sec (of CPU time)
+Setting up auxiliary I and S matrices: done in 6.24e-005 secs
+Constructing RapidNJ tree: done in 8.18998e-005 secs
+Computing RapidNJ tree took 0.000218 sec (of wall-clock time) 0.000000 sec (of CPU time)
+Log-likelihood of RapidNJ tree: -1276.886
+--------------------------------------------------------------------
+|             INITIALIZING CANDIDATE TREE SET                      |
+--------------------------------------------------------------------
+Generating 98 parsimony trees... 0.095 second
+Computing log-likelihood of 98 initial trees ... 0.062 seconds
+Current best score: -1274.562
+
+Do NNI search on 20 best initial trees
+Estimate model parameters (epsilon = 0.100)
+BETTER TREE FOUND at iteration 1: -1273.859
+Estimate model parameters (epsilon = 0.100)
+BETTER TREE FOUND at iteration 7: -1272.526
+Iteration 10 / LogL: -1274.647 / Time: 0h:0m:29s
+Iteration 20 / LogL: -1273.325 / Time: 0h:0m:29s
+Finish initializing candidate tree set (5)
+Current best tree score: -1272.526 / CPU time: 0.395
+Number of iterations: 20
+--------------------------------------------------------------------
+|               OPTIMIZING CANDIDATE TREE SET                      |
+--------------------------------------------------------------------
+Iteration 30 / LogL: -1272.567 / Time: 0h:0m:29s (0h:0m:1s left)
+UPDATE BEST LOG-LIKELIHOOD: -1272.525
+Iteration 40 / LogL: -1279.843 / Time: 0h:0m:30s (0h:0m:1s left)
+Iteration 50 / LogL: -1272.537 / Time: 0h:0m:30s (0h:0m:1s left)
+Log-likelihood cutoff on original alignment: -1294.964
+Iteration 60 / LogL: -1273.445 / Time: 0h:0m:30s (0h:0m:1s left)
+Iteration 70 / LogL: -1272.919 / Time: 0h:0m:30s (0h:0m:0s left)
+Iteration 80 / LogL: -1272.528 / Time: 0h:0m:30s (0h:0m:0s left)
+Iteration 90 / LogL: -1272.530 / Time: 0h:0m:31s (0h:0m:0s left)
+Iteration 100 / LogL: -1272.541 / Time: 0h:0m:31s (0h:0m:0s left)
+Log-likelihood cutoff on original alignment: -1294.964
+NOTE: Bootstrap correlation coefficient of split occurrence frequencies: 0.998
+TREE SEARCH COMPLETED AFTER 108 ITERATIONS / Time: 0h:0m:31s
+
+--------------------------------------------------------------------
+|                    FINALIZING TREE SEARCH                        |
+--------------------------------------------------------------------
+Performs final model parameters optimization
+Estimate model parameters (epsilon = 0.010)
+1. Initial log-likelihood: -1272.525
+Optimal log-likelihood: -1272.524
+Rate parameters:  A-C: 1.11873  A-G: 3.60066  A-T: 2.90591  C-G: 0.10610  C-T: 3.60066  G-T: 1.00000
+Base frequencies:  A: 0.305  C: 0.162  G: 0.303  T: 0.230
+Proportion of invariable sites: 0.530
+Parameters optimization took 1 rounds (0.002 sec)
+BEST SCORE FOUND : -1272.524
+
+Testing tree branches by SH-like aLRT with 1000 replicates...
+0.143 sec.
+Creating bootstrap support values...
+Split supports printed to NEXUS file Myco_r3_iqtree.splits.nex
+Total tree length: 1.423
+
+Total number of iterations: 108
+CPU time used for tree search: 2.234 sec (0h:0m:2s)
+Wall-clock time used for tree search: 2.228 sec (0h:0m:2s)
+Total CPU time used: 42.297 sec (0h:0m:42s)
+Total wall-clock time used: 31.795 sec (0h:0m:31s)
+
+Computing bootstrap consensus tree...
+Reading input file Myco_r3_iqtree.splits.nex...
+15 taxa and 124 splits.
+Consensus tree written to Myco_r3_iqtree.contree
+Reading input trees file Myco_r3_iqtree.contree
+Log-likelihood of consensus tree: -1272.526
+
+Analysis results written to: 
+  IQ-TREE report:                Myco_r3_iqtree.iqtree
+  Maximum-likelihood tree:       Myco_r3_iqtree.treefile
+  Likelihood distances:          Myco_r3_iqtree.mldist
+
+Ultrafast bootstrap approximation results written to:
+  Split support values:          Myco_r3_iqtree.splits.nex
+  Consensus tree:                Myco_r3_iqtree.contree
+  Screen log file:               Myco_r3_iqtree.log
+
+Date and Time: Thu Oct 01 00:10:46 2026

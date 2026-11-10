@@ -1,0 +1,50 @@
+name: Analysis
+description: A statistical choice, a change to any script that writes a published result, or a figure or number in the paper
+title: "[analysis] "
+labels: ["analysis"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        These scripts produced the figures and tables of a published paper
+        (FEMS Microbiology Ecology, fiag124). Use this for anything that would
+        change a published number, including changes that look small, and for
+        reopening any decision listed in `RULES.md`. Say what the current
+        approach is before proposing a different one.
+  - type: dropdown
+    id: area
+    attributes:
+      label: Where this lives
+      options:
+        - Octocoral_Revised_Analysis_COMPLETE (diversity, PERMANOVA, global ANCOM-BC2; Fig 2, Table 2)
+        - Core_Microbiome_Revised_AllThresholds or 05/08 (core microbiome; Fig 3, core bootstrap)
+        - Figure4_species_ANCOMBC_REVISION2 or 06/06b/06c (host-specific ANCOM-BC2; Fig 4)
+        - 01-02 (BLAST verification, stable ASV labels)
+        - 03/04/11/16 (bacterial trees; Figs 5-6)
+        - 07 (pairwise identity table)
+        - Supplementary_Materials
+        - maps or host phylogenies
+        - Not sure yet
+    validations:
+      required: true
+  - type: textarea
+    id: current
+    attributes:
+      label: What we do now
+      description: The current test, threshold, or decision, and where it is defined (script and line, RULES.md entry).
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: What you think we should do instead, and why
+      description: Include the reasoning. If there is a reference that settles it, name it.
+    validations:
+      required: true
+  - type: textarea
+    id: consequences
+    attributes:
+      label: Which published results move
+      description: The figures, tables, or numbers in the paper that would change. An estimate is fine; say it is an estimate.
+    validations:
+      required: true

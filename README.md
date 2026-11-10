@@ -1,85 +1,75 @@
-# Octocoral Microbiome Project
+# Octocoral microbiomes in Florida
 
-## Project Description
+Analysis code for:
 
-This repository contains the revised manuscript analysis workflow for the Florida octocoral microbiome project. The analysis focuses on bacterial community structure, core microbiomes, differential abundance testing, and targeted phylogenetic investigations of dominant symbionts in four octocoral host species.
+> Liberman R, Gómez-Corrales M, Lopez JV. Host species identity drives
+> temporally stable octocoral microbiomes in Florida. *FEMS Microbiology
+> Ecology*, fiag124.
 
-### Study System
+The bacterial communities (16S rRNA, V4) of four octocorals were sampled at four
+reef sites off southeast Florida (Broward and Miami, shallow and deep) in 2023,
+2024 and 2025: the branching *Eunicea flexuosa* and *Muricea muricata* and the
+encrusting *Briareum asbestinum* and *Erythropodium caribaeorum*, with seawater
+controls. Communities differ mainly by host species and are stable across years
+and sites. *Endozoicomonas* and *Mycoplasma* dominate the branching species,
+and the encrusting species have richer, more mixed communities.
 
-- **Location**: Broward County and Deerfield Beach reef sites, southeastern Florida, USA
-- **Study Period**: 2023-2025
-- **Hosts**: *Briareum asbestinum*, *Erythropodium caribaeorum*, *Eunicea flexuosa*, *Muricea muricata*
-- **Sample Types**: Octocoral samples and seawater controls
-- **Sites**: BC4, BC6, DC1, DC3
-- **Sequencing**: Illumina MiSeq 2x300bp, 16S rRNA V4 region
-- **Taxonomy**: SILVA 138.2
+Raw reads are in NCBI BioProject
+[PRJNA1373357](https://www.ncbi.nlm.nih.gov/bioproject/PRJNA1373357).
 
-## Revision Update
+## Getting started
 
-The repository has been updated with the new R scripts from the manuscript revision source folder. These updated scripts now support the current revision workflow and are reflected in this README.
+You need R 4.4 or later. Clone **outside any OneDrive or Dropbox folder**:
 
-## Repository Contents
-
-```
-Octocoral-microbiome/
-├── .git/
-├── LICENSE
-├── Octocoral-microbiome.Rproj
-├── Octocoral_Manuscript_Revision_Analysis_Knowledge.md
-├── README.md
-├── maps/
-├── phylogeny/
-├── raw files/
-├── output/
-├── script/
-│   ├── Octocoral_Microbiome_Comprehensive_Analysis.Rmd
-│   ├── README.md
-│   └── RarefactionCurve_Jun24_Oct24run.png
-├── Community compsition ASV_top 20 percent per sample_MARCH17.R
-├── Core_Microbiome_Revised_AllThresholds.R
-├── Endozoicomonas_Phylogenetic_Analysis_CLEAN.R
-├── Endozoicomonas_Phylogenetic_Analysis_FINAL.R
-├── Figure4_species_ANCOMBC.R
-├── Mycoplasma_Phylogenetic_Analysis.R
-├── NCBI_BLAST_unclassified_ASVs_localBLAST.R
-├── Octocoral_Revised_Analysis_COMPLETE.R
-└── Supplementary_Materials.R
+```bash
+git clone https://github.com/ronenliberman/Octocoral-microbiome.git
+cd Octocoral-microbiome
+git config core.hooksPath .githooks       # once per clone
 ```
 
-## Analysis Workflow
+Open `Octocoral-microbiome.Rproj`, then run the scripts in the order given in
+[HELPER.md](HELPER.md). Every path is relative to the repository, so nothing
+needs editing. Outputs are written to `output/`, which is not tracked.
 
-The new revision scripts include the following core components:
+## What is here
 
-- Data import, filtering, and QC
-- Alpha and beta diversity statistics
-- Multi-threshold core microbiome analysis
-- Bootstrap validation of the 90% core
-- ANCOM-BC2 differential abundance testing
-- Targeted phylogenetic analysis for *Endozoicomonas* and *Mycoplasma*
+| Folder | Contents |
+|---|---|
+| `raw files/` | QIIME2 outputs the analysis starts from (PEE2 feature table, taxonomy, representative sequences) and the sample metadata |
+| `blast/` | Saved NCBI BLAST results used to verify the *Endozoicomonas* and *Mycoplasma* ASVs |
+| `phylogeny/bacteria/` | Alignments and IQ-TREE results of the two bacterial trees (Figs 5–6) |
+| `phylogeny/` | Host mtMutS phylogenies (Fig S2) |
+| `maps/` | Site map (Fig 1) |
+| `script/` | Community analysis: diversity, PERMANOVA, core microbiome, ANCOM-BC2 (Figs 2–4, Table 2) |
+| `script/Editor_round3/` | ASV verification, stable labels, trees, Figs 3–6 and the supplementary workbook |
+| `documentation/` | Project context and analysis notes |
 
-## How to Run
+## Where to look
 
-### Option 1: Open in RStudio
-1. Open `script/Octocoral_Microbiome_Comprehensive_Analysis.Rmd`
-2. Update local file paths if necessary
-3. Knit to generate the full analysis report
+| File | What it is |
+|---|---|
+| `HELPER.md` | Layout, run order, and what each script reads and writes. |
+| `RULES.md` | Every data-handling and analytical decision, with the reason. |
+| `AGENTS.md` | How we work here: branches, pull requests, raw data, attribution. Read before committing. |
+| `DATA_PROVENANCE.md` | Where each dataset came from. |
+| `documentation/PROJECT_CONTEXT.md` | The science, the review history and the open items. |
 
-### Option 2: Render from the command line
+## Two things to know before you commit
 
-```r
-Rscript -e "rmarkdown::render('script/Octocoral_Microbiome_Comprehensive_Analysis.Rmd')"
-```
+**Raw data and saved BLAST results are read-only.** Nothing under `raw files/`
+or `blast/` changes. If a file looks wrong, open an issue.
 
-## Notes
+**Nothing in the history credits an AI tool.** `tools/check-attribution.sh`
+enforces it locally (via the hook above) and on every pull request.
 
-- `Octocoral_Manuscript_Revision_Analysis_Knowledge.md` contains the revision rationale and analysis decisions.
-- The new root-level R scripts are the updated revision code.
-- If you want the revision scripts moved into `script/` for consistency, I can do that.
+## People
 
----
+Ronen Liberman (Nova Southeastern University) leads the project and wrote the
+analysis code. Matías Gómez-Corrales made the site map and the host phylogenies.
+Jose V. Lopez supervised the work.
 
-**Principal Investigator**: Ronen Liberman  
-**Laboratory**: Joe Lopez Lab, Nova Southeastern University  
-**Contact**: rliberma@nova.edu  
+Contact: Ronen Liberman, rliberma@nova.edu
 
-**Status**: Manuscript revision in progress
+## License
+
+The code is released under the [MIT License](LICENSE).

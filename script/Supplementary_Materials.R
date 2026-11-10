@@ -23,7 +23,7 @@ library(magrittr)
 set.seed(123)
 
 # --- Output directory --------------------------------------------------------
-supp_dir <- file.path("~/Postdocing_NSU/JOE LOPEZ Lab/Manuscript/Revision/Supplementary")
+supp_dir <- file.path(here::here(), "output", "Supplementary")
 dir.create(supp_dir, showWarnings = FALSE, recursive = TRUE)
 
 species_list <- c("B. asbestinum", "E. caribaeorum", "E. flexuosa", "M. muricata")
@@ -37,69 +37,124 @@ cat("\n###############################################################\n")
 cat("SUPPLEMENTARY MATERIALS\n")
 cat("###############################################################\n")
 
-# =============================================================================
-# TABLE S1: Sample counts per species × site × year
-# =============================================================================
-
-cat("\n=== Table S1: Sample breakdown ===\n")
-
-meta_octo <- d$sample_table %>%
-  filter(SPP != "Seawater") %>%
+#### new table S2 #####
+# --- Setup ---
+# --- Build colony count table from existing filtered microeco object ---
+meta_filt <- d$sample_table %>%
   as.data.frame() %>%
-  tibble::rownames_to_column("SampleID")
+  filter(SPP %in% c("B. asbestinum", "E. caribaeorum", "E. flexuosa", "M. muricata"))
 
-# Site labels
-site_labels_map <- c(
-  "BC4" = "Deerfield Shallow", "BC6" = "Deerfield Deep",
-  "DC1" = "Miami Shallow",     "DC3" = "Miami Deep"
-)
-
-meta_octo$Site_Label <- recode(meta_octo$Site, !!!site_labels_map)
-
-sample_table_s1 <- meta_octo %>%
-  group_by(SPP, Site_Label, Year) %>%
+# --- Count colonies per species x site ---
+count_table <- meta_filt %>%
+  group_by(SPP, Site) %>%
   summarise(n = n(), .groups = "drop") %>%
-  pivot_wider(names_from = Year, values_from = n, values_fill = 0) %>%
-  mutate(Total = rowSums(across(where(is.numeric)))) %>%
-  arrange(SPP, Site_Label)
+  pivot_wider(names_from = Site, values_from = n, values_fill = 0) %>%
+  dplyr::select(SPP, DC1, DC3, BC4, BC6) %>%
+  mutate(Total = DC1 + DC3 + BC4 + BC6)
 
-# Add species totals
-species_totals <- sample_table_s1 %>%
+# --- Add totals row ---
+totals_row <- count_table %>%
+  summarise(across(where(is.numeric), sum)) %>%
+  mutate(SPP = "Total")
+
+count_table <- bind_rows(count_table, totals_row)
+
+# --- Rename columns AFTER all calculations ---
+colnames(count_table) <- c("Species", 
+                           "Miami Shallow (DC1)", 
+                           "Miami Deep (DC3)", 
+                           "Broward Shallow (BC4)", 
+                           "Broward Deep (BC6)", 
+                           "Total")
+
+# --- Build flextable ---
+n_body <- nrow(count_table)
+
+ft <- flextable(count_table) %>%
+  theme_vanilla() %>%
+  bold(part = "header") %>%
+  bold(i = n_body, part = "body") %>%
+  italic(i = 1:(n_body - 1), j = "Species", part = "body") %>%
+  align(j = 2:6, align = "center", part = "all") %>%
+  align(j = "Species", align = "left", part = "all") %>%
+  fontsize(size = 10, part = "header") %>%
+  fontsize(size = 9,  part = "body") %>%
+  font(fontname = "Times New Roman", part = "all") %>%
+  border_inner_h(border = fp_border(width = 0.5, color = "grey70")) %>%
+  hline(i = n_body - 1,
+        border = fp_border(width = 1, color = "black"), part = "body") %>%
+  autofit()
+
+# --- Export to Word ---
+caption_text <- "Table S2. Number of octocoral colonies sampled per species and site across all three collection years (2023–2025)"
+
+doc <- read_docx() %>%
+  body_add_par(caption_text, style = "Table Caption") %>%
+  body_add_flextable(ft)
+
+print(doc, target = file.path(output_dir, "New Table_S2_colony_counts_per_species_site.docx"))
+cat("Saved: Table_S2_colony_counts_per_species_site.docx\n")
+
+# =============================================================================
+# TABLE S3: Summary of 16S rRNA gene sequencing results - from here all table numbers should be +1
+# =============================================================================
+
+cat("\n=== Table S3: Sequencing summary ===\n")
+
+# Use unrarefied data (d) which includes seawater
+seq_summary <- d$sample_table %>%
+  as.data.frame() %>%
+  tibble::rownames_to_column("SampleID") %>%
+  mutate(Total_Reads = colSums(d$otu_table)[SampleID],
+         ASVs_Detected = colSums(d$otu_table[, SampleID] > 0)) %>%
   group_by(SPP) %>%
-  summarise(across(where(is.numeric), sum), .groups = "drop") %>%
-  mutate(Site_Label = "Total")
+  summarise(
+    `Number of samples` = n(),
+    `Total Reads` = format(sum(Total_Reads), big.mark = ","),
+    `Mean Reads per Sample` = format(round(mean(Total_Reads)), big.mark = ","),
+    `Total ASVs` = format(max(ASVs_Detected), big.mark = ","),
+    .groups = "drop"
+  ) %>%
+  rename(Group = SPP)
 
-sample_table_s1 <- bind_rows(sample_table_s1, species_totals) %>%
-  arrange(SPP, desc(Site_Label == "Total"))
+# Reorder: octocorals first, seawater last
+spp_order <- c("B. asbestinum", "E. caribaeorum", "E. flexuosa", "M. muricata", "Seawater")
+seq_summary <- seq_summary %>%
+  mutate(Group = factor(Group, levels = spp_order)) %>%
+  arrange(Group) %>%
+  mutate(Group = as.character(Group))
 
-write.csv(sample_table_s1, file.path(supp_dir, "Table_S1_sample_counts.csv"),
+write.csv(seq_summary, file.path(supp_dir, "Table_S2_sequencing_summary.csv"),
           row.names = FALSE)
 
 # Word table
-ft_s1 <- flextable(sample_table_s1) %>%
-  set_header_labels(SPP = "Host Species", Site_Label = "Site") %>%
-  merge_v(j = "SPP") %>%
-  bold(j = "Total", part = "body") %>%
-  bold(~ Site_Label == "Total", part = "body") %>%
+ft_s2 <- flextable(seq_summary) %>%
   theme_vanilla() %>%
-  italic(j = "SPP", part = "body") %>%
+  italic(~ Group != "Seawater", j = "Group", part = "body") %>%
+  align(j = 2:5, align = "center", part = "all") %>%
   font(fontname = "Times New Roman", part = "all") %>%
   fontsize(size = 10, part = "all") %>%
   autofit() %>%
-  set_caption("Table S1. Number of samples collected per host species, reef site, and year.")
+  add_footer_lines(paste0(
+    "Data represent post-quality filtering results (maximum expected errors = 2) ",
+    "following removal of chloroplast and mitochondrial sequences. ",
+    "Sequences were processed using QIIME2 (2024.5) with DADA2 and assigned to ASVs ",
+    "at 100% sequence similarity. Taxonomy assigned using SILVA 138.2."
+  )) %>%
+  fontsize(size = 9, part = "footer") %>%
+  set_caption("Table S2. Summary of 16S rRNA gene sequencing results for octocoral-associated bacterial communities and seawater controls.")
 
-doc_s1 <- read_docx() %>% body_add_flextable(ft_s1)
-print(doc_s1, target = file.path(supp_dir, "Table_S1_sample_counts.docx"))
-cat("Saved: Table_S1\n")
+doc_s2 <- read_docx() %>% body_add_flextable(ft_s2)
+print(doc_s2, target = file.path(supp_dir, "Table_S2_sequencing_summary.docx"))
 
+cat("Saved: Table_S2\n")
 
 # =============================================================================
-# TABLE S2: Alpha diversity summary per species (mean ± SD)
+# TABLE S3: Alpha diversity and sample counts per species × year
 # =============================================================================
 
-cat("\n=== Table S2: Alpha diversity summary ===\n")
+cat("\n=== Table S3: Alpha diversity and sample summary per species × year ===\n")
 
-# Use mt_rarefied alpha diversity
 mt_rarefied$cal_alphadiv(PD = FALSE)
 mt_rarefied$alpha_diversity$Pielou <- mt_rarefied$alpha_diversity$Shannon /
   log(mt_rarefied$alpha_diversity$Observed)
@@ -112,7 +167,28 @@ alpha_df <- mt_rarefied$alpha_diversity %>%
   ) %>%
   filter(SPP != "Seawater")
 
-alpha_summary <- alpha_df %>%
+# Summary per species × year
+alpha_by_year <- alpha_df %>%
+  group_by(SPP, Year) %>%
+  summarise(
+    n = n(),
+    Observed_mean = round(mean(Observed, na.rm = TRUE), 0),
+    Observed_sd   = round(sd(Observed, na.rm = TRUE), 0),
+    Shannon_mean  = round(mean(Shannon, na.rm = TRUE), 2),
+    Shannon_sd    = round(sd(Shannon, na.rm = TRUE), 2),
+    Pielou_mean   = round(mean(Pielou, na.rm = TRUE), 3),
+    Pielou_sd     = round(sd(Pielou, na.rm = TRUE), 3),
+    .groups = "drop"
+  ) %>%
+  mutate(
+    `Observed Richness` = paste0(Observed_mean, " ± ", Observed_sd),
+    `Shannon Diversity` = paste0(Shannon_mean, " ± ", Shannon_sd),
+    `Pielou's Evenness` = paste0(Pielou_mean, " ± ", Pielou_sd)
+  ) %>%
+  dplyr::select(SPP, Year, n, `Observed Richness`, `Shannon Diversity`, `Pielou's Evenness`)
+
+# Species totals row
+alpha_totals <- alpha_df %>%
   group_by(SPP) %>%
   summarise(
     n = n(),
@@ -125,13 +201,25 @@ alpha_summary <- alpha_df %>%
     .groups = "drop"
   ) %>%
   mutate(
-    Observed = paste0(Observed_mean, " ± ", Observed_sd),
-    Shannon  = paste0(Shannon_mean, " ± ", Shannon_sd),
-    Pielou   = paste0(Pielou_mean, " ± ", Pielou_sd)
+    Year = "All",
+    `Observed Richness` = paste0(Observed_mean, " ± ", Observed_sd),
+    `Shannon Diversity` = paste0(Shannon_mean, " ± ", Shannon_sd),
+    `Pielou's Evenness` = paste0(Pielou_mean, " ± ", Pielou_sd)
   ) %>%
-  dplyr::select(SPP, n, Observed, Shannon, Pielou)
+  dplyr::select(SPP, Year, n, `Observed Richness`, `Shannon Diversity`, `Pielou's Evenness`)
 
-# Kruskal-Wallis results
+# Combine
+alpha_by_year$Year <- as.character(alpha_by_year$Year)
+alpha_combined <- bind_rows(alpha_by_year, alpha_totals) %>%
+  arrange(SPP, Year) %>%
+  rename(Species = SPP)
+
+write.csv(alpha_combined, file.path(supp_dir, "Table_S3_alpha_diversity_by_year.csv"),
+          row.names = FALSE)
+
+# Kruskal-Wallis and Dunn's tests
+library(dunn.test)
+
 kw_obs <- kruskal.test(Observed ~ SPP, data = alpha_df)
 kw_sha <- kruskal.test(Shannon ~ SPP, data = alpha_df)
 kw_pie <- kruskal.test(Pielou ~ SPP, data = alpha_df)
@@ -143,72 +231,73 @@ cat("Kruskal-Wallis Shannon: chi-sq =", round(kw_sha$statistic, 2),
 cat("Kruskal-Wallis Pielou: chi-sq =", round(kw_pie$statistic, 2),
     "p =", formatC(kw_pie$p.value, format = "e", digits = 2), "\n")
 
-write.csv(alpha_summary, file.path(supp_dir, "Table_S2_alpha_diversity.csv"),
-          row.names = FALSE)
-
-# Dunn's pairwise results
-library(dunn.test)
 dunn_obs <- dunn.test(alpha_df$Observed, alpha_df$SPP, method = "bonferroni")
+dunn_sha <- dunn.test(alpha_df$Shannon, alpha_df$SPP, method = "bonferroni")
 dunn_pie <- dunn.test(alpha_df$Pielou, alpha_df$SPP, method = "bonferroni")
 
 dunn_df <- data.frame(
   Comparison = dunn_obs$comparisons,
   Observed_Z = round(dunn_obs$Z, 2),
   Observed_P_adj = formatC(dunn_obs$P.adjusted, format = "e", digits = 2),
+  Shannon_Z = round(dunn_sha$Z, 2),
+  Shannon_P_adj = formatC(dunn_sha$P.adjusted, format = "e", digits = 2),
   Pielou_Z = round(dunn_pie$Z, 2),
   Pielou_P_adj = formatC(dunn_pie$P.adjusted, format = "e", digits = 2),
   stringsAsFactors = FALSE
 )
 
-write.csv(dunn_df, file.path(supp_dir, "Table_S2b_dunn_pairwise.csv"),
+write.csv(dunn_df, file.path(supp_dir, "Table_S3b_dunn_pairwise.csv"),
           row.names = FALSE)
 
-# Word table — alpha summary
-ft_s2 <- flextable(alpha_summary) %>%
-  set_header_labels(SPP = "Host Species", n = "n",
-                    Observed = "Observed Richness", Shannon = "Shannon",
-                    Pielou = "Pielou's Evenness") %>%
+# --- Word table: main alpha summary ---
+ft_s3 <- flextable(alpha_combined) %>%
+  merge_v(j = "Species") %>%
+  bold(~ Year == "All", part = "body") %>%
   theme_vanilla() %>%
-  italic(j = "SPP", part = "body") %>%
-  align(j = 2:5, align = "center", part = "all") %>%
+  italic(j = "Species", part = "body") %>%
+  align(j = 3:6, align = "center", part = "all") %>%
   font(fontname = "Times New Roman", part = "all") %>%
   fontsize(size = 10, part = "all") %>%
   autofit() %>%
+  hline(i = which(alpha_combined$Year == "All"), 
+        border = fp_border(width = 1, color = "grey50")) %>%
   add_footer_lines(paste0(
-    "Values are mean ± SD. All metrics differed significantly among species ",
-    "(Kruskal-Wallis, P < 0.001). Rarefied to 20,000 reads per sample."
+    "Values are mean ± SD. Rarefied to 20,000 reads per sample. ",
+    "All metrics differed significantly among species (Kruskal-Wallis, P < 0.001). ",
+    "Pairwise comparisons in Table S3b."
   )) %>%
-  set_caption("Table S2. Alpha diversity metrics across octocoral host species.")
+  fontsize(size = 9, part = "footer") %>%
+  set_caption("Table S3. Alpha diversity metrics of bacterial communities across four octocoral species and sampling years.")
 
-# Word table — Dunn's pairwise
-ft_s2b <- flextable(dunn_df) %>%
+# --- Word table: Dunn's pairwise ---
+ft_s3b <- flextable(dunn_df) %>%
   set_header_labels(
     Comparison = "Comparison",
     Observed_Z = "Z", Observed_P_adj = "Adj. P",
+    Shannon_Z = "Z", Shannon_P_adj = "Adj. P",
     Pielou_Z = "Z", Pielou_P_adj = "Adj. P"
   ) %>%
   add_header_row(
-    values = c("", "Observed Richness", "Pielou's Evenness"),
-    colwidths = c(1, 2, 2)
+    values = c("", "Observed Richness", "Shannon Diversity", "Pielou's Evenness"),
+    colwidths = c(1, 2, 2, 2)
   ) %>%
   theme_vanilla() %>%
-  align(j = 2:5, align = "center", part = "all") %>%
+  align(j = 2:7, align = "center", part = "all") %>%
   font(fontname = "Times New Roman", part = "all") %>%
   fontsize(size = 10, part = "all") %>%
   autofit() %>%
   add_footer_lines("Dunn's test with Bonferroni correction.") %>%
-  set_caption("Table S2b. Pairwise alpha diversity comparisons.")
+  set_caption("Table S3b. Pairwise alpha diversity comparisons among octocoral species.")
 
-doc_s2 <- read_docx() %>%
-  body_add_flextable(ft_s2) %>%
+doc_s3 <- read_docx() %>%
+  body_add_flextable(ft_s3) %>%
   body_add_par("") %>%
-  body_add_flextable(ft_s2b)
-print(doc_s2, target = file.path(supp_dir, "Table_S2_alpha_diversity.docx"))
-cat("Saved: Table_S2\n")
+  body_add_flextable(ft_s3b)
+print(doc_s3, target = file.path(supp_dir, "Table_S3_alpha_diversity.docx"))
 
-
+cat("Saved: Table_S3\n")
 # =============================================================================
-# TABLE S3: PERMANOVA summary — all models (Aitchison)
+# TABLE S4: PERMANOVA summary — all models (Aitchison)
 # =============================================================================
 
 cat("\n=== Table S3: PERMANOVA summary ===\n")
@@ -289,10 +378,10 @@ perm_summary$Significance <- case_when(
   TRUE ~ "ns"
 )
 
-write.csv(perm_summary, file.path(supp_dir, "Table_S3_PERMANOVA_Aitchison.csv"),
+write.csv(perm_summary, file.path(supp_dir, "Table_S4_PERMANOVA_Aitchison.csv"),
           row.names = FALSE)
 
-ft_s3 <- flextable(perm_summary) %>%
+ft_s4 <- flextable(perm_summary) %>%
   set_header_labels(F_stat = "F", P = "P-value", Significance = "Sig.") %>%
   merge_v(j = "Analysis") %>%
   theme_vanilla() %>%
@@ -302,18 +391,18 @@ ft_s3 <- flextable(perm_summary) %>%
   fontsize(size = 10, part = "all") %>%
   autofit() %>%
   add_footer_lines("PERMANOVA on Aitchison distances (999 permutations). *** P < 0.001, ** P < 0.01, * P < 0.05.") %>%
-  set_caption("Table S3. PERMANOVA results across global and within-species models.")
+  set_caption("Table S4. PERMANOVA results across global and within-species models.")
 
-doc_s3 <- read_docx() %>% body_add_flextable(ft_s3)
-print(doc_s3, target = file.path(supp_dir, "Table_S3_PERMANOVA.docx"))
-cat("Saved: Table_S3\n")
+doc_s4 <- read_docx() %>% body_add_flextable(ft_s4)
+print(doc_s4, target = file.path(supp_dir, "Table_S4_PERMANOVA.docx"))
+cat("Saved: Table_S4\n")
 
 
 # =============================================================================
-# TABLE S4: Seawater vs. Octocoral pairwise PERMANOVA
+# TABLE S5: Seawater vs. Octocoral pairwise PERMANOVA
 # =============================================================================
 
-cat("\n=== Table S4: Seawater vs. octocoral comparisons ===\n")
+cat("\n=== Table S5: Seawater vs. octocoral comparisons ===\n")
 
 # Include seawater in CLR dataset
 octo_clr_sw <- clone(mt_CLR)
@@ -380,10 +469,10 @@ sw_pairwise$Significance <- case_when(
 sw_pairwise$Type <- ifelse(grepl("Seawater", sw_pairwise$Comparison),
                            "vs. Seawater", "Between species")
 
-write.csv(sw_pairwise, file.path(supp_dir, "Table_S4_pairwise_PERMANOVA.csv"),
+write.csv(sw_pairwise, file.path(supp_dir, "Table_S5_pairwise_PERMANOVA.csv"),
           row.names = FALSE)
 
-ft_s4 <- flextable(sw_pairwise %>% dplyr::select(-Type)) %>%
+ft_s5 <- flextable(sw_pairwise %>% dplyr::select(-Type)) %>%
   set_header_labels(F_stat = "F", P = "P-value", P_adj = "Adj. P",
                     Significance = "Sig.") %>%
   theme_vanilla() %>%
@@ -392,27 +481,27 @@ ft_s4 <- flextable(sw_pairwise %>% dplyr::select(-Type)) %>%
   fontsize(size = 10, part = "all") %>%
   autofit() %>%
   add_footer_lines("Pairwise PERMANOVA on Aitchison distances (999 permutations). P-values Bonferroni-corrected.") %>%
-  set_caption("Table S4. Pairwise PERMANOVA comparisons among octocoral species and seawater.")
+  set_caption("Table S5. Pairwise PERMANOVA comparisons among octocoral species and seawater.")
 
-doc_s4 <- read_docx() %>% body_add_flextable(ft_s4)
-print(doc_s4, target = file.path(supp_dir, "Table_S4_pairwise_PERMANOVA.docx"))
+doc_s5 <- read_docx() %>% body_add_flextable(ft_s5)
+print(doc_s5, target = file.path(supp_dir, "Table_S5_pairwise_PERMANOVA.docx"))
 
-cat("Saved: Table_S4\n")
+cat("Saved: Table_S5\n")
 cat("\nSeawater comparison summary:\n")
 print(sw_pairwise %>% filter(Type == "vs. Seawater") %>%
         dplyr::select(Comparison, R2, F_stat, P_adj, Significance))
 
 
 # =============================================================================
-# TABLE S5: ANCOM-BC2 species-specific significant ASVs
+# TABLE S6: ANCOM-BC2 species-specific significant ASVs
 # (Already exported by main pipeline)
 # =============================================================================
 
-cat("\n=== Table S5: ANCOM-BC2 results ===\n")
+cat("\n=== Table S6: ANCOM-BC2 results ===\n")
 
-# Check if already exists
-ancom_csv <- file.path(output_dir, "Figure4_ANCOMBC2_Year_significant.csv")
-ancom_site_csv <- file.path(output_dir, "Figure4_ANCOMBC2_Site_significant.csv")
+ancom_dir <- file.path(here::here(), "output", "Editor_round3", "ANCOMBC2_PEE2")   # written by Editor_round3/06c
+ancom_csv <- file.path(ancom_dir, "Figure4_ANCOMBC2_Year_significant.csv")
+ancom_site_csv <- file.path(ancom_dir, "Figure4_ANCOMBC2_Site_significant.csv")
 
 if (file.exists(ancom_csv) & file.exists(ancom_site_csv)) {
   cat("  ANCOM-BC2 results already exported by Figure4_species_ANCOMBC.R:\n")
@@ -439,10 +528,10 @@ if (file.exists(ancom_csv) & file.exists(ancom_site_csv)) {
     dplyr::select(Species, Analysis, Comparison, Taxon, Direction, LFC, SE, Adj_P) %>%
     arrange(Species, Analysis, Comparison, Adj_P)
   
-  write.csv(combined_sig, file.path(supp_dir, "Table_S5_ANCOMBC2_significant.csv"),
+  write.csv(combined_sig, file.path(supp_dir, "Table_S6_ANCOMBC2_significant.csv"),
             row.names = FALSE)
   
-  ft_s5 <- flextable(combined_sig) %>%
+  ft_s6 <- flextable(combined_sig) %>%
     set_header_labels(Adj_P = "Adj. P") %>%
     merge_v(j = c("Species", "Analysis")) %>%
     theme_vanilla() %>%
@@ -454,11 +543,11 @@ if (file.exists(ancom_csv) & file.exists(ancom_site_csv)) {
     autofit() %>%
     width(j = "Taxon", width = 2.2) %>%
     add_footer_lines("ANCOM-BC2 on unrarefied ASV counts, FDR-adjusted P < 0.05. LFC = log fold change, SE = standard error.") %>%
-    set_caption("Table S5. Differentially abundant ASVs within each octocoral species (ANCOM-BC2).")
+    set_caption("Table S6. Differentially abundant ASVs within each octocoral species (ANCOM-BC2).")
   
-  doc_s5 <- read_docx() %>% body_add_flextable(ft_s5)
-  print(doc_s5, target = file.path(supp_dir, "Table_S5_ANCOMBC2.docx"))
-  cat("Saved: Table_S5\n")
+  doc_s6 <- read_docx() %>% body_add_flextable(ft_s6)
+  print(doc_s6, target = file.path(supp_dir, "Table_S6_ANCOMBC2.docx"))
+  cat("Saved: Table_S6\n")
   
 } else {
   cat("  WARNING: ANCOM-BC2 CSVs not found in Output/\n")
@@ -473,7 +562,7 @@ if (file.exists(ancom_csv) & file.exists(ancom_site_csv)) {
 cat("\n=== Figure S: Species-specific PCoA (Aitchison) ===\n")
 
 site_labels_map <- c(
-  "BC4" = "DfS", "BC6" = "DfD",
+  "BC4" = "BrS", "BC6" = "BrD",
   "DC1" = "MiS", "DC3" = "MiD"
 )
 
@@ -519,16 +608,17 @@ for (spp in species_list) {
     geom_point(data = centroids, aes(x = PCo1, y = PCo2, color = Year),
                shape = 3, size = 5, stroke = 2, inherit.aes = FALSE) +
     scale_color_manual(values = year_colors) +
-    scale_shape_manual(name = "Site", values = c("DfS" = 16, "DfD" = 17,
-                                                  "MiS" = 15, "MiD" = 18)) +
+    scale_shape_manual(name = "Site", values = c("BrS" = 16, "BrD" = 17,
+                                                 "MiS" = 15, "MiD" = 18)) +
     theme_classic() +
     theme(
       axis.title = element_text(size = 14, face = "bold"),
       axis.text = element_text(size = 12, color = "black"),
       plot.title = element_text(size = 16, face = "bold.italic", hjust = 0.5),
       panel.border = element_rect(color = "black", fill = NA, linewidth = 1),
-      legend.title = element_text(size = 12, face = "bold"),
-      legend.text = element_text(size = 11),
+      legend.title = element_text(size = 14, face = "bold"),
+      legend.text = element_text(size = 14),
+      legend.key.size = unit(0.8, "cm"),
       legend.position = "right"
     ) +
     labs(
@@ -542,7 +632,7 @@ for (spp in species_list) {
   # Save individual
   spp_fname <- gsub("\\. ", "_", spp)
   ggsave(file.path(supp_dir, paste0("FigS_PCoA_Aitchison_", spp_fname, ".png")),
-         p, width = 8, height = 6, dpi = 300, bg = "white")
+         p, width = 8, height = 8, dpi = 300, bg = "white")
 }
 
 # Combined 4-panel
@@ -556,8 +646,11 @@ shared_legend <- get_legend(
   spp_pcoa_list[[1]] +
     theme(legend.position = "bottom",
           legend.box = "horizontal",
-          legend.margin = margin(0, 0, 0, 0))
-)
+          legend.margin = margin(0, 0, 0, 0),
+          legend.title = element_text(size = 18, face = "bold"),
+          legend.text = element_text(size = 18),
+          legend.key.size = unit(0.8, "cm")))
+
 
 p_final_pcoa <- plot_grid(
   p_combined_pcoa, shared_legend,
@@ -565,7 +658,7 @@ p_final_pcoa <- plot_grid(
 )
 
 ggsave(file.path(supp_dir, "FigS_Species_PCoA_Aitchison_combined.png"),
-       p_final_pcoa, width = 14, height = 12, dpi = 300, bg = "white")
+       p_final_pcoa, width = 14, height = 14, dpi = 600, bg = "white")
 ggsave(file.path(supp_dir, "FigS_Species_PCoA_Aitchison_combined.pdf"),
        p_final_pcoa, width = 14, height = 12)
 
@@ -573,7 +666,7 @@ cat("Saved: Species-specific PCoA panels\n")
 
 
 # =============================================================================
-# TABLE S6: Core microbiome complete list
+# TABLE S7: Core microbiome complete list
 # (Already exported by Core_Microbiome_Revised_AllThresholds.R)
 # =============================================================================
 
@@ -584,7 +677,7 @@ core_csv <- file.path(output_dir, "Core_Microbiome_AllThresholds_Summary_TSS.csv
 if (file.exists(core_csv)) {
   cat("  Already exported: Core_Microbiome_AllThresholds_Summary_TSS.csv\n")
   cat("  Copying to Supplementary folder...\n")
-  file.copy(core_csv, file.path(supp_dir, "Table_S6_core_microbiome_all_thresholds.csv"),
+  file.copy(core_csv, file.path(supp_dir, "Table_S7_core_microbiome_all_thresholds.csv"),
             overwrite = TRUE)
 } else {
   cat("  WARNING: Core microbiome CSV not found. Run Core_Microbiome_Revised_AllThresholds.R first.\n")
@@ -598,26 +691,9 @@ if (file.exists(boot_csv)) {
   cat("  Copied: Bootstrap validated core summary\n")
 }
 
-
 # =============================================================================
-# SUMMARY
+# TABLE S8 (core ASV pairwise identity) is produced by
+# script/Editor_round3/07_TableS8_revised.R from the round-3 alignments.
+# The round-2 version that used the R1 trees is in
+# script/archive/TableS8_round2_bp_differences.R.
 # =============================================================================
-
-cat("\n###############################################################\n")
-cat("SUPPLEMENTARY MATERIALS COMPLETE\n")
-cat("###############################################################\n")
-cat("\nFiles saved to:", supp_dir, "\n\n")
-
-cat("Tables:\n")
-cat("  Table_S1_sample_counts.docx/.csv\n")
-cat("  Table_S2_alpha_diversity.docx/.csv\n")
-cat("  Table_S2b_dunn_pairwise.csv\n")
-cat("  Table_S3_PERMANOVA.docx/.csv\n")
-cat("  Table_S4_pairwise_PERMANOVA.docx/.csv  (includes seawater comparisons)\n")
-cat("  Table_S5_ANCOMBC2.docx/.csv\n")
-cat("  Table_S6_core_microbiome_all_thresholds.csv\n")
-cat("  Table_S6b_bootstrap_validated_core.csv\n")
-
-cat("\nFigures:\n")
-cat("  FigS_Species_PCoA_Aitchison_combined.png/.pdf\n")
-cat("  FigS_PCoA_Aitchison_[species].png  (4 individual panels)\n")

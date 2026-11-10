@@ -8,7 +8,7 @@ This document captures the complete analytical pipeline, decisions, and reasonin
 > Manuscript ID: **FEMSEC-25-12-0321** (FEMS Microbiology Ecology)
 > Authors: Ronen Liberman (RL), Matías Gómez-Corrales (MGC), Jose V. Lopez (JVL)
 
-It is intended as a standing reference for the associated GitHub repository and for future Claude Code sessions working on this codebase, so that analytical choices made during peer review do not have to be reconstructed from scratch.
+It is intended as a standing reference for the associated GitHub repository and for anyone working on this codebase later, so that analytical choices made during peer review do not have to be reconstructed from scratch. It covers the first revision (FEMSEC-25-12-0321) and predates the round-3 changes recorded in `documentation/PROJECT_CONTEXT.md`.
 
 ---
 

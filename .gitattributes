@@ -1,0 +1,28 @@
+# Normalize line endings for text so Windows and macOS collaborators do not
+# see whole-file diffs. Everything else is detected automatically.
+* text=auto
+
+# Never apply line-ending conversion to these; doing so corrupts them.
+*.docx  binary
+*.dotx  binary
+*.pptx  binary
+*.xlsx  binary
+*.xls   binary
+*.rds   binary
+*.RData binary
+*.qza   binary
+*.qzv   binary
+*.pdf   binary
+*.png   binary
+*.jpg   binary
+*.jpeg  binary
+*.tif   binary
+*.tiff  binary
+*.zip   binary
+
+# Data are stored byte for byte: no line-ending conversion, ever (AGENTS.md §2).
+raw[[:space:]]files/**  -text
+blast/**               -text
+phylogeny/bacteria/**  -text
+*.fasta                -text
+*.json                 -text

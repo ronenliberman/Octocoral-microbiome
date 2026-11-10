@@ -1,0 +1,381 @@
+IQ-TREE 3.1.4 built Sep 10 2026
+
+Input file name: Endo_r3_mafft_aligned.fasta
+Type of analysis: ModelFinder + tree reconstruction + ultrafast bootstrap (1000 replicates)
+Random seed number: 123
+
+REFERENCES
+----------
+
+To cite IQ-TREE 3 please use:
+
+Thomas K.F. Wong, Nhan Ly-Trong, Huaiyan Ren, Piyumal Demotte, Hector Banos,
+Andrew J. Roger, Edward Susko, Chris Bielow, Nicola De Maio, Nick Goldman,
+Matthew W. Hahn, Mario dos Reis, Le Sy Vinh, Gavin Huttley, Robert Lanfear, Bui Quang Minh (2026)
+IQ-TREE 3: Phylogenomic Inference Software using Complex Evolutionary Models.
+Molecular Biology and Evolution, msag117.
+https://doi.org/10.1093/molbev/msag117
+
+Since you used ModelFinder please also cite: 
+
+Subha Kalyaanamoorthy, Bui Quang Minh, Thomas KF Wong, Arndt von Haeseler,
+and Lars S Jermiin (2017) ModelFinder: Fast model selection for
+accurate phylogenetic estimates. Nature Methods, 14:587–589.
+https://doi.org/10.1038/nmeth.4285
+
+Since you used ultrafast bootstrap (UFBoot) please also cite: 
+
+Diep Thi Hoang, Olga Chernomor, Arndt von Haeseler, Bui Quang Minh,
+and Le Sy Vinh (2018) UFBoot2: Improving the ultrafast bootstrap
+approximation. Mol. Biol. Evol., 35:518–522.
+https://doi.org/10.1093/molbev/msx281
+
+SEQUENCE ALIGNMENT
+------------------
+
+NOTE: Alignment sequence type is auto-detected. If in doubt, specify it via -st option.
+Input data: 33 sequences with 255 nucleotide sites
+Number of constant sites: 203 (= 79.6078% of all sites)
+Number of invariant (constant or ambiguous constant) sites: 203 (= 79.6078% of all sites)
+Number of parsimony informative sites: 28
+Number of distinct site patterns: 53
+
+ModelFinder
+-----------
+
+Best-fit model according to BIC: HKY+R2
+
+List of models sorted by BIC scores: 
+
+Model                  LogL         AIC      w-AIC        AICc     w-AICc         BIC      w-BIC
+HKY+R2             -828.993    1789.987 -  0.00135    1837.029 -   0.0415    2023.710 +    0.188
+K2P+R2             -828.995    1789.989 -  0.00135    1837.032 -   0.0415    2023.712 +    0.188
+K2P+R2             -828.995    1789.989 -  0.00135    1837.032 -   0.0415    2023.712 +    0.188
+HKY+F+R2           -821.928    1781.856 +   0.0786    1834.072 +    0.182    2026.203 +    0.054
+K3Pu+R2            -827.878    1789.755 -  0.00151    1838.483 -   0.0201    2027.020 -   0.0359
+K3P+R2             -827.878    1789.756 -  0.00151    1838.483 -   0.0201    2027.020 -   0.0359
+K3P+R2             -827.878    1789.756 -  0.00151    1838.483 -   0.0201    2027.020 -   0.0359
+TPM2u+R2           -828.178    1790.356 -  0.00112    1839.083 -   0.0149    2027.620 -   0.0266
+TPM2+R2            -828.210    1790.420 -  0.00109    1839.147 -   0.0144    2027.684 -   0.0257
+TPM2+R2            -828.210    1790.420 -  0.00109    1839.147 -   0.0144    2027.684 -   0.0257
+TPM3u+R2           -828.489    1790.978 - 0.000822    1839.705 -   0.0109    2028.243 -   0.0195
+TPM3+R2            -828.493    1790.986 - 0.000818    1839.714 -   0.0108    2028.251 -   0.0194
+TPM3+R2            -828.493    1790.986 - 0.000818    1839.714 -   0.0108    2028.251 -   0.0194
+TN+F+R2            -820.405    1780.811 +    0.133    1834.832 +    0.124    2028.699 -   0.0155
+TN+R2              -828.990    1791.981 - 0.000498    1840.708 -   0.0066    2029.245 -   0.0118
+TNe+R2             -828.991    1791.983 - 0.000497    1840.710 -  0.00659    2029.248 -   0.0118
+TNe+R2             -828.991    1791.983 - 0.000497    1840.710 -  0.00659    2029.248 -   0.0118
+K3Pu+F+R2          -820.745    1781.489 +   0.0944    1835.511 +   0.0887    2029.378 -    0.011
+HKY+I+R2           -829.247    1792.495 - 0.000385    1841.222 -   0.0051    2029.759 -  0.00912
+K2P+I+R2           -829.258    1792.515 - 0.000381    1841.243 -  0.00505    2029.780 -  0.00903
+K2P+I+R2           -829.258    1792.515 - 0.000381    1841.243 -  0.00505    2029.780 -  0.00903
+TPM3u+F+R2         -821.480    1782.959 -   0.0453    1836.981 -   0.0425    2030.848 -   0.0053
+TPM2u+F+R2         -821.585    1783.170 -   0.0408    1837.192 -   0.0383    2031.058 -  0.00477
+TIM+F+R2           -819.356    1780.711 +    0.139    1836.580 +    0.052    2032.141 -  0.00277
+HKY+F+I+R2         -822.283    1784.567 -   0.0203    1838.589 -    0.019    2032.455 -  0.00237
+TIM+R2             -827.872    1791.743 -  0.00056    1842.195 -  0.00314    2032.549 -  0.00226
+K3Pu+I+R2          -827.994    1791.989 - 0.000496    1842.441 -  0.00277    2032.795 -    0.002
+K3P+I+R2           -827.997    1791.995 - 0.000494    1842.446 -  0.00277    2032.801 -  0.00199
+K3P+I+R2           -827.997    1791.995 - 0.000494    1842.446 -  0.00277    2032.801 -  0.00199
+TIM2+R2            -828.178    1792.356 - 0.000413    1842.808 -  0.00231    2033.162 -  0.00166
+TIM2e+R2           -828.239    1792.478 - 0.000388    1842.930 -  0.00217    2033.284 -  0.00157
+TIM2e+R2           -828.239    1792.478 - 0.000388    1842.930 -  0.00217    2033.284 -  0.00157
+TIM3+F+R2          -819.955    1781.911 +   0.0765    1837.780 -   0.0285    2033.341 -  0.00152
+TIMe+R2            -828.341    1792.683 -  0.00035    1843.135 -  0.00196    2033.489 -  0.00141
+TIMe+R2            -828.341    1792.683 -  0.00035    1843.135 -  0.00196    2033.489 -  0.00141
+TPM2u+I+R2         -828.420    1792.839 - 0.000324    1843.291 -  0.00181    2033.645 -  0.00131
+TIM2+F+R2          -820.121    1782.242 +   0.0648    1838.110 -   0.0242    2033.671 -  0.00129
+TPM2+I+R2          -828.461    1792.922 - 0.000311    1843.374 -  0.00174    2033.728 -  0.00125
+TPM2+I+R2          -828.461    1792.922 - 0.000311    1843.374 -  0.00174    2033.728 -  0.00125
+TIM3+R2            -828.478    1792.956 - 0.000306    1843.407 -  0.00171    2033.762 -  0.00123
+TIM3e+R2           -828.488    1792.976 - 0.000303    1843.427 -  0.00169    2033.782 -  0.00122
+TIM3e+R2           -828.488    1792.976 - 0.000303    1843.427 -  0.00169    2033.782 -  0.00122
+TN+F+I+R2          -820.290    1782.580 +   0.0547    1838.449 -   0.0204    2034.010 -  0.00109
+TPM3u+I+R2         -828.750    1793.501 - 0.000233    1843.953 -   0.0013    2034.307 - 0.000939
+TPM3+I+R2          -828.760    1793.520 - 0.000231    1843.971 -  0.00129    2034.326 -  0.00093
+TPM3+I+R2          -828.760    1793.520 - 0.000231    1843.971 -  0.00129    2034.326 -  0.00093
+TN+I+R2            -829.237    1794.474 - 0.000143    1844.926 - 0.000801    2035.280 - 0.000577
+TNe+I+R2           -829.249    1794.499 - 0.000141    1844.950 - 0.000791    2035.305 -  0.00057
+TNe+I+R2           -829.249    1794.499 - 0.000141    1844.950 - 0.000791    2035.305 -  0.00057
+K3Pu+F+I+R2        -820.973    1783.946 -   0.0277    1839.815 -   0.0103    2035.376 -  0.00055
+TPM3u+F+I+R2       -821.844    1785.688 -   0.0116    1841.557 -  0.00431    2037.117 -  0.00023
+TIM+F+I+R2         -819.098    1782.196 +   0.0663    1839.954 -  0.00961    2037.167 - 0.000225
+TVM+R2             -827.437    1792.875 - 0.000318    1845.091 - 0.000737    2037.222 - 0.000219
+TPM2u+F+I+R2       -821.909    1785.818 -   0.0108    1841.687 -  0.00404    2037.248 - 0.000216
+TVMe+R2            -827.908    1793.817 - 0.000199    1846.033 -  0.00046    2038.164 - 0.000137
+TVMe+R2            -827.908    1793.817 - 0.000199    1846.033 -  0.00046    2038.164 - 0.000137
+TIM+I+R2           -827.983    1793.966 - 0.000184    1846.182 - 0.000427    2038.313 - 0.000127
+TIMe+I+R2          -827.985    1793.971 - 0.000184    1846.187 - 0.000426    2038.318 - 0.000126
+TIMe+I+R2          -827.985    1793.971 - 0.000184    1846.187 - 0.000426    2038.318 - 0.000126
+TIM3+F+I+R2        -819.787    1783.573 -   0.0333    1841.332 -  0.00483    2038.544 - 0.000113
+TIM2+F+I+R2        -820.019    1784.039 -   0.0264    1841.797 -  0.00383    2039.010 - 8.94e-005
+TIM2+I+R2          -828.414    1794.828 -  0.00012    1847.044 - 0.000278    2039.175 - 8.23e-005
+TIM2e+I+R2         -828.432    1794.863 - 0.000118    1847.080 - 0.000273    2039.211 - 8.09e-005
+TIM2e+I+R2         -828.432    1794.863 - 0.000118    1847.080 - 0.000273    2039.211 - 8.09e-005
+TIM3+I+R2          -828.741    1795.482 - 8.64e-005    1847.698 -   0.0002    2039.829 - 5.94e-005
+TIM3e+I+R2         -828.750    1795.500 - 8.57e-005    1847.716 - 0.000198    2039.847 - 5.88e-005
+TIM3e+I+R2         -828.750    1795.500 - 8.57e-005    1847.716 - 0.000198    2039.847 - 5.88e-005
+TVM+F+R2           -820.665    1785.331 -   0.0138    1843.089 -  0.00201    2040.302 - 4.69e-005
+GTR+R2             -827.433    1794.866 - 0.000118    1848.888 -  0.00011    2042.755 - 1.37e-005
+SYM+R2             -827.434    1794.867 - 0.000118    1848.889 -  0.00011    2042.756 - 1.37e-005
+SYM+R2             -827.434    1794.867 - 0.000118    1848.889 -  0.00011    2042.756 - 1.37e-005
+GTR+F+R2           -819.217    1784.434 -   0.0217    1844.125 -  0.00119    2042.946 - 1.25e-005
+TVM+I+R2           -827.572    1795.143 - 0.000102    1849.165 - 9.61e-005    2043.032 - 1.2e-005
+TVMe+I+R2          -828.030    1796.060 - 6.47e-005    1850.082 - 6.08e-005    2043.949 - 7.57e-006
+TVMe+I+R2          -828.030    1796.060 - 6.47e-005    1850.082 - 6.08e-005    2043.949 - 7.57e-006
+TVM+F+I+R2         -820.889    1787.778 -  0.00407    1847.469 - 0.000224    2046.291 - 2.35e-006
+GTR+F+I+R2         -818.942    1785.883 -   0.0105    1847.550 - 0.000216    2047.937 - 1.03e-006
+GTR+I+R2           -827.565    1797.131 - 3.79e-005    1853.000 - 1.41e-005    2048.561 - 7.54e-007
+SYM+I+R2           -827.568    1797.136 - 3.78e-005    1853.005 - 1.41e-005    2048.566 - 7.52e-007
+SYM+I+R2           -827.568    1797.136 - 3.78e-005    1853.005 - 1.41e-005    2048.566 - 7.52e-007
+F81+F+R2           -850.329    1836.658 - 9.9e-014    1887.109 - 5.54e-013    2077.464 - 3.99e-013
+F81+R2             -859.606    1849.212 - 1.86e-016    1894.608 - 1.3e-014    2079.394 - 1.52e-013
+JC+R2              -859.733    1849.467 - 1.64e-016    1894.864 - 1.15e-014    2079.649 - 1.34e-013
+JC+R2              -859.733    1849.467 - 1.64e-016    1894.864 - 1.15e-014    2079.649 - 1.34e-013
+F81+F+I+R2         -850.169    1838.338 - 4.27e-014    1890.554 - 9.89e-014    2082.685 - 2.93e-014
+F81+I+R2           -859.742    1851.485 - 5.97e-017    1898.527 - 1.84e-015    2085.208 - 8.31e-015
+JC+I+R2            -859.807    1851.614 - 5.6e-017    1898.656 - 1.72e-015    2085.337 - 7.79e-015
+JC+I+R2            -859.807    1851.614 - 5.6e-017    1898.656 - 1.72e-015    2085.337 - 7.79e-015
+JC+R3              -859.584    1853.168 - 2.57e-017    1901.895 - 3.41e-016    2090.432 - 6.1e-016
+JC+I+R3            -859.742    1855.484 - 8.08e-018    1905.936 - 4.52e-017    2096.290 - 3.26e-017
+JC+I+G4            -868.686    1867.372 - 2.12e-020    1912.768 - 1.48e-018    2097.554 - 1.73e-017
+JC+G4              -873.545    1875.091 - 4.47e-022    1918.880 - 6.99e-020    2101.732 - 2.15e-018
+JC+I               -875.664    1879.328 - 5.37e-023    1923.117 - 8.4e-021    2105.968 - 2.58e-019
+JC                 -915.281    1956.561 - 9.1e-040    1998.781 - 3.12e-037    2179.661 - 2.57e-035
+
+AIC, w-AIC   : Akaike information criterion scores and weights.
+AICc, w-AICc : Corrected AIC scores and weights.
+BIC, w-BIC   : Bayesian information criterion scores and weights.
+
+Plus signs denote the 95% confidence sets.
+Minus signs denote significant exclusion.
+
+SUBSTITUTION PROCESS
+--------------------
+
+Model of substitution: HKY+F+R2
+
+Rate parameter R:
+
+  A-C: 1.0000
+  A-G: 7.7045
+  A-T: 1.0000
+  C-G: 1.0000
+  C-T: 7.7045
+  G-T: 1.0000
+
+State frequencies: (empirical counts from alignment)
+
+  pi(A) = 0.271
+  pi(C) = 0.1883
+  pi(G) = 0.3541
+  pi(T) = 0.1865
+
+Rate matrix Q:
+
+  A    -1.247   0.07566     1.096   0.07494
+  C    0.1089   -0.8285    0.1423    0.5774
+  G     0.839   0.07566   -0.9896   0.07494
+  T    0.1089     0.583    0.1423   -0.8341
+
+Model of rate heterogeneity: FreeRate with 2 categories
+Site proportion and rates:  (0.94,0.2451) (0.06,12.83)
+
+ Category  Relative_rate  Proportion
+  1         0.2451         0.94
+  2         12.83          0.06
+
+MAXIMUM LIKELIHOOD TREE
+-----------------------
+
+Log-likelihood of the tree: -817.9124 (s.e. 66.6754)
+Unconstrained log-likelihood (without tree): -615.6218
+Number of free parameters (#branches + #model parameters): 69
+Akaike information criterion (AIC) score: 1773.8247
+Corrected Akaike information criterion (AICc) score: 1826.0410
+Bayesian information criterion (BIC) score: 2018.1719
+
+Total tree length (sum of branch lengths): 0.7129
+Sum of internal branch lengths: 0.3016 (42.3048% of tree length)
+
+WARNING: 14 near-zero internal branches (<0.0039) should be treated with caution
+         Such branches are denoted by '**' in the figure below
+
+NOTE: Tree is UNROOTED although outgroup taxon 'Endo_4' is drawn at root
+Numbers in parentheses are SH-aLRT support (%) / ultrafast bootstrap support (%)
+
++**Endo_4
+|
+|                          +**Endo_3
+|                       +**| (0/21)
+|                       |  |  +--Endo_12
+|                       |  +**| (0/14)
+|                       |     +--Endo_16
+|                    +**| (0/10)
+|                    |  |                     +**Endo_1
+|                    |  |                  +--| (81.7/95)
+|                    |  |                  |  |        +--Endo_14
+|                    |  |                  |  |     +--| (75.9/79)
+|                    |  |                  |  |     |  +--REF_E_ascidiicola_AVMART05T
+|                    |  |                  |  |  +--| (80.6/89)
+|                    |  |                  |  |  |  |                                          +**Endo_15
+|                    |  |                  |  |  |  |          +-------------------------------| (100/100)
+|                    |  |                  |  |  |  |          |                               +--Endo_51
+|                    |  |                  |  |  |  |       +--| (57/91)
+|                    |  |                  |  |  |  |       |  +**Endo_25
+|                    |  |                  |  |  |  |  +----| (96.1/98)
+|                    |  |                  |  |  |  |  |    +**REF_E_acroporae_Acr_14T
+|                    |  |                  |  |  |  +**| (0/50)
+|                    |  |                  |  |  |     +--REF_E_atrinae_WP70T
+|                    |  |                  |  +--| (84/93)
+|                    |  |                  |     +**Endo_18
+|                    |  |              +---| (99.1/96)
+|                    |  |              |   +**Endo_19
+|                    |  |           +--| (85.1/69)
+|                    |  |           |  |  +**Endo_11
+|                    |  |           |  +**| (0/68)
+|                    |  |           |     |  +**REF_E_elysicola_MKT110T
+|                    |  |           |     +**| (0/48)
+|                    |  |           |        +**REF_E_montiporae_CL_33T
+|                    |  |        +**| (0/24)
+|                    |  |        |  |  +**Endo_9
+|                    |  |        |  +**| (0/67)
+|                    |  |        |     +**REF_E_lisbonensis_NE40T
+|                    |  |     +**| (0/55)
+|                    |  |     |  |  +**Endo_6
+|                    |  |     |  +**| (0/60)
+|                    |  |     |     +--REF_E_gorgoniicola_PS125T
+|                    |  |  +--| (75.2/63)
+|                    |  |  |  +--------------------------------------------------REF_Kistimonas_asteriae_KMD_001T
+|                    |  +--| (85.3/45)
+|                    |     +**Endo_8
+|                 +--| (70.3/29)
+|                 |  +--Endo_13
+|              +--| (79.7/62)
+|              |  +---REF_E_numazuensis_HC50T
+|           +**| (0/77)
+|           |  +---------Endo_23
+|        +**| (0/41)
+|        |  |  +**Endo_7
+|        |  +--| (86.2/74)
+|        |     +--Endo_24
+|     +**| (0/27)
+|     |  +**Endo_5
+|  +--| (84.7/70)
+|  |  +--Endo_10
++--| (86.3/89)
+|  |  +**Endo_2
+|  +**| (0/88)
+|     +**REF_E_euniceicola_EF212T
+|
++--Endo_17
+
+Tree in newick format:
+
+(Endo_4:0.0000029053,(((((((((Endo_3:0.0000010264,(Endo_12:0.0040664177,Endo_16:0.0040655173)0/14:0.0000010264)0/21:0.0000010264,(((((((Endo_1:0.0000010264,(((Endo_14:0.0043983104,REF_E_ascidiicola_AVMART05T:0.0042235607)75.9/79:0.0046824353,((((Endo_15:0.0000025773,Endo_51:0.0039601723)100/100:0.1657689226,Endo_25:0.0000022281)57/91:0.0134113193,REF_E_acroporae_Acr_14T:0.0006590738)96.1/98:0.0291122782,REF_E_atrinae_WP70T:0.0041563624)0/50:0.0000022064)80.6/89:0.0043014381,Endo_18:0.0000020741)84/93:0.0042022052)81.7/95:0.0041789116,Endo_19:0.0000026142)99.1/96:0.0231823256,(Endo_11:0.0000010264,(REF_E_elysicola_MKT110T:0.0000010264,REF_E_montiporae_CL_33T:0.0000010264)0/48:0.0000010264)0/68:0.0000025326)85.1/69:0.0041463529,(Endo_9:0.0000010264,REF_E_lisbonensis_NE40T:0.0000010264)0/67:0.0000010264)0/24:0.0000010264,(Endo_6:0.0026382937,REF_E_gorgoniicola_PS125T:0.0139903750)0/60:0.0015316357)0/55:0.0000026045,REF_Kistimonas_asteriae_KMD_001T:0.2646100175)75.2/63:0.0130451622,Endo_8:0.0000010264)85.3/45:0.0042245857)0/10:0.0000020340,Endo_13:0.0040883796)70.3/29:0.0062585543,REF_E_numazuensis_HC50T:0.0243000826)79.7/62:0.0112158054,Endo_23:0.0545626346)0/77:0.0000021996,(Endo_7:0.0000020371,Endo_24:0.0133161267)86.2/74:0.0041140359)0/41:0.0000020290,Endo_5:0.0000010264)0/27:0.0000010264,Endo_10:0.0040901728)84.7/70:0.0040815374,(Endo_2:0.0000010264,REF_E_euniceicola_EF212T:0.0000010264)0/88:0.0000010264)86.3/89:0.0041134892,Endo_17:0.0041460261);
+
+CONSENSUS TREE
+--------------
+
+Consensus tree is constructed from 1000 bootstrap trees
+Log-likelihood of consensus tree: -817.925577
+Robinson-Foulds distance between ML tree and consensus tree: 6
+
+Branches with support >0.000000% are kept (extended consensus)
+Branch lengths are optimized by maximum likelihood on original alignment
+Numbers in parentheses are bootstrap supports (%)
+
++--Endo_4
+|
+|                          +--Endo_3
+|                       +--| (27)
+|                       |  +--Endo_16
+|                    +--| (54)
+|                    |  |  +--Endo_12
+|                    |  +--| (34)
+|                    |     +--Endo_13
+|                 +--| (29)
+|                 |  |                     +--Endo_1
+|                 |  |                  +--| (95)
+|                 |  |                  |  |        +--Endo_14
+|                 |  |                  |  |     +--| (79)
+|                 |  |                  |  |     |  +--REF_E_ascidiicola_AVMART05T
+|                 |  |                  |  |  +--| (89)
+|                 |  |                  |  |  |  |                                          +--Endo_15
+|                 |  |                  |  |  |  |          +-------------------------------| (100)
+|                 |  |                  |  |  |  |          |                               +--Endo_51
+|                 |  |                  |  |  |  |       +--| (91)
+|                 |  |                  |  |  |  |       |  +--Endo_25
+|                 |  |                  |  |  |  |  +----| (98)
+|                 |  |                  |  |  |  |  |    +--REF_E_acroporae_Acr_14T
+|                 |  |                  |  |  |  +--| (50)
+|                 |  |                  |  |  |     +--REF_E_atrinae_WP70T
+|                 |  |                  |  +--| (93)
+|                 |  |                  |     +--Endo_18
+|                 |  |              +---| (96)
+|                 |  |              |   +--Endo_19
+|                 |  |           +--| (69)
+|                 |  |           |  |  +--Endo_11
+|                 |  |           |  +--| (68)
+|                 |  |           |     |  +--REF_E_elysicola_MKT110T
+|                 |  |           |     +--| (48)
+|                 |  |           |        +--REF_E_montiporae_CL_33T
+|                 |  |        +--| (24)
+|                 |  |        |  |  +--Endo_9
+|                 |  |        |  +--| (67)
+|                 |  |        |     +--REF_E_lisbonensis_NE40T
+|                 |  |     +--| (55)
+|                 |  |     |  |  +--Endo_6
+|                 |  |     |  +--| (60)
+|                 |  |     |     +--REF_E_gorgoniicola_PS125T
+|                 |  |  +--| (63)
+|                 |  |  |  +---------------------------------------------------REF_Kistimonas_asteriae_KMD_001T
+|                 |  +--| (45)
+|                 |     +--Endo_8
+|              +--| (62)
+|              |  +---REF_E_numazuensis_HC50T
+|           +--| (77)
+|           |  +---------Endo_23
+|        +--| (41)
+|        |  |  +--Endo_7
+|        |  +--| (74)
+|        |     +--Endo_24
+|     +--| (27)
+|     |  +--Endo_5
+|  +--| (70)
+|  |  +--Endo_10
++--| (89)
+|  |  +--Endo_2
+|  +--| (88)
+|     +--REF_E_euniceicola_EF212T
+|
++--Endo_17
+
+
+Consensus tree in newick format: 
+
+(Endo_4:0.0000029247,(((((((((Endo_3:0.0000029247,Endo_16:0.0040577970)27:0.0000029247,(Endo_12:0.0040585528,Endo_13:0.0040808045)34:0.0000029247)54:0.0000024595,(((((((Endo_1:0.0000029247,(((Endo_14:0.0043898988,REF_E_ascidiicola_AVMART05T:0.0042102259)79:0.0046687051,((((Endo_15:0.0000029247,Endo_51:0.0039463603)100:0.1651519550,Endo_25:0.0000022297)91:0.0133224874,REF_E_acroporae_Acr_14T:0.0007285741)98:0.0289302545,REF_E_atrinae_WP70T:0.0041456381)50:0.0000029247)89:0.0042882510,Endo_18:0.0000029247)93:0.0041904924)95:0.0041675676,Endo_19:0.0000029247)96:0.0231149577,(Endo_11:0.0000029247,(REF_E_elysicola_MKT110T:0.0000029247,REF_E_montiporae_CL_33T:0.0000029247)48:0.0000029247)68:0.0000029247)69:0.0041359102,(Endo_9:0.0000029247,REF_E_lisbonensis_NE40T:0.0000029247)67:0.0000029247)24:0.0000029247,(Endo_6:0.0036576103,REF_E_gorgoniicola_PS125T:0.0139770361)60:0.0005022491)55:0.0043356456,REF_Kistimonas_asteriae_KMD_001T:0.2642015627)63:0.0086755845,Endo_8:0.0000029354)45:0.0042156605)29:0.0062863775,REF_E_numazuensis_HC50T:0.0242602726)62:0.0111909169,Endo_23:0.0544759816)77:0.0000027974,(Endo_7:0.0000029247,Endo_24:0.0133019705)74:0.0041096588)41:0.0000029247,Endo_5:0.0000029247)27:0.0000029247,Endo_10:0.0040869688)70:0.0040785886,(Endo_2:0.0000029247,REF_E_euniceicola_EF212T:0.0000029247)88:0.0000029247)89:0.0041106635,Endo_17:0.0041434449);
+
+ALISIM COMMAND
+--------------
+To simulate an alignment of the same length as the original alignment, using the tree and model parameters estimated from this analysis, you can use the following command:
+
+--alisim simulated_MSA -t Endo_r3_iqtree.treefile -m "HKY{7.7045}+F{0.271042,0.18832,0.354124,0.186514}+R2{0.939999,0.245076,0.0600014,12.8268}" --length 255
+
+To mimic the alignment used to produce this analysis, i.e. simulate an alignment of the same length as the original alignment, using the tree and model parameters estimated from this analysis *and* copying the same gap positions as the original alignment, you can use the following command:
+
+iqtree -s Endo_r3_mafft_aligned.fasta --alisim mimicked_MSA
+
+To simulate any number of alignments in either of the two commandlines above, use the --num-alignments options, for example mimic 100 alignments you would use the command line:
+
+iqtree -s Endo_r3_mafft_aligned.fasta --alisim mimicked_MSA --num-alignments 100
+
+For more information on using AliSim, please visit: www.iqtree.org/doc/AliSim
+
+TIME STAMP
+----------
+
+Date and time: Thu Oct 01 00:10:01 2026
+Total CPU time used: 74.359375 seconds (0h:1m:14s)
+Total wall-clock time used: 69.3254945 seconds (0h:1m:9s)
+

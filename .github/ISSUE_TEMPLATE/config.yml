@@ -1,0 +1,11 @@
+blank_issues_enabled: true
+contact_links:
+  - name: How we work in this repository
+    url: https://github.com/ronenliberman/Octocoral-microbiome/blob/main/AGENTS.md
+    about: Branch naming, pull requests, raw data, and the attribution rule. Read this before your first commit.
+  - name: Why a dataset is handled the way it is
+    url: https://github.com/ronenliberman/Octocoral-microbiome/blob/main/RULES.md
+    about: Filters, normalization per test, the BLAST verification rule, tree settings, and the core microbiome, with the reasoning for each.
+  - name: The science record
+    url: https://github.com/ronenliberman/Octocoral-microbiome/blob/main/documentation/PROJECT_CONTEXT.md
+    about: Design, review history, the results the scripts reproduce, and open items.

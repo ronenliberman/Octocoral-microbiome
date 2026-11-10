@@ -1,0 +1,44 @@
+name: Data question
+description: Something looks wrong in a raw file, a saved BLAST result, or the metadata, or a sample whose identity is in doubt
+title: "[data] "
+labels: ["data"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Files under `raw files/` and `blast/` are never edited. Whatever the
+        problem turns out to be, it gets handled in the script that reads the
+        file and written down in `RULES.md`. This issue is where we work out
+        which.
+  - type: dropdown
+    id: dataset
+    attributes:
+      label: Dataset
+      options:
+        - Feature table, taxonomy or representative sequences (raw files/*.qza, *.fasta)
+        - Sample metadata (raw files/metadata_all_edited.csv)
+        - Saved BLAST results or lineage cache (blast/)
+        - Tree inputs, alignments or trees (phylogeny/bacteria/)
+        - Other or unsure
+    validations:
+      required: true
+  - type: input
+    id: file
+    attributes:
+      label: File and script
+      description: The path of the file, and the script that reads it.
+      placeholder: raw files/metadata_all_edited.csv, read by script/Editor_round3/00_setup.R
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: What looks wrong
+      description: What you expected to see, and what is actually there. Paste the rows or values if that is clearer.
+    validations:
+      required: true
+  - type: textarea
+    id: effect
+    attributes:
+      label: What it affects downstream
+      description: Which samples, ASVs, figures or tables change if this is real. Say "unsure" if you have not traced it.

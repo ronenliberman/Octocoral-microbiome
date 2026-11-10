@@ -1,0 +1,191 @@
+"Label","Hit_rank","NCBI_accession","NCBI_title","NCBI_taxid","NCBI_sciname","NCBI_pident","NCBI_align_length","NCBI_query_coverage_pct","NCBI_evalue","NCBI_bitscore","NCBI_class","NCBI_order","NCBI_family","NCBI_genus"
+"Myco_1",1,"KP174128","Uncultured Mycoplasma sp. clone OTU3 16S ribosomal RNA gene, partial sequence","167967","uncultured Mycoplasma sp.",98.8,250,100,1.12869e-120,446.163,"Mollicutes","Mycoplasmatales","Mycoplasmataceae","Mycoplasma"
+"Myco_1",2,"DQ917813","Uncultured Mycoplasma sp. clone BME4 16S ribosomal RNA gene, partial sequence","167967","uncultured Mycoplasma sp.",94.84,252,100,1.49138e-104,392.61,"Mollicutes","Mycoplasmatales","Mycoplasmataceae","Mycoplasma"
+"Myco_1",3,"HM173254","Uncultured bacterium clone 6206-B93 16S ribosomal RNA gene, partial sequence","77133","uncultured bacterium",97.38,229,91.6,5.36395e-104,390.763,NA,NA,NA,NA
+"Myco_1",4,"DQ917846","Uncultured Mycoplasma sp. clone BME162 16S ribosomal RNA gene, partial sequence","167967","uncultured Mycoplasma sp.",94.02,251,100,1.16109e-100,379.683,"Mollicutes","Mycoplasmatales","Mycoplasmataceae","Mycoplasma"
+"Myco_1",5,"JX966226","Uncultured Mollicutes bacterium clone M15 16S ribosomal RNA gene, partial sequence","220137","uncultured Mollicutes bacterium",93.6,250,100,5.40203e-99,374.144,"Mollicutes",NA,NA,NA
+"Myco_1",6,"KY279607","Uncultured bacterium clone CP_Otu4545 16S ribosomal RNA gene, partial sequence","77133","uncultured bacterium",90.8,250,100,2.54913e-87,335.364,NA,NA,NA,NA
+"Myco_1",7,"KX891441","Uncultured Mycoplasma sp. clone TTGE Band 42 16S ribosomal RNA gene, partial sequence","167967","uncultured Mycoplasma sp.",89.6,250,100,2.56723e-82,318.744,"Mollicutes","Mycoplasmatales","Mycoplasmataceae","Mycoplasma"
+"Myco_1",8,"HM173262","Uncultured bacterium clone 6206-B57 16S ribosomal RNA gene, partial sequence","77133","uncultured bacterium",97.21,179,71.6,7.18854e-78,303.971,NA,NA,NA,NA
+"Myco_1",9,"HM173253","Uncultured bacterium clone 6206-B44 16S ribosomal RNA gene, partial sequence","77133","uncultured bacterium",97.19,178,71.2,2.58546e-77,302.124,NA,NA,NA,NA
+"Myco_1",10,"DQ910147","Uncultured bacterium clone FS312_454_1000bp_1263B 16S ribosomal RNA gene, partial sequence","77133","uncultured bacterium",88.4,250,100,2.58546e-77,302.124,NA,NA,NA,NA
+"Myco_2",1,"KP174128","Uncultured Mycoplasma sp. clone OTU3 16S ribosomal RNA gene, partial sequence","167967","uncultured Mycoplasma sp.",98,250,100,2.44319e-117,435.083,"Mollicutes","Mycoplasmatales","Mycoplasmataceae","Mycoplasma"
+"Myco_2",2,"HM173254","Uncultured bacterium clone 6206-B93 16S ribosomal RNA gene, partial sequence","77133","uncultured bacterium",98.25,229,91.6,2.47801e-107,401.843,NA,NA,NA,NA
+"Myco_2",3,"JX966226","Uncultured Mollicutes bacterium clone M15 16S ribosomal RNA gene, partial sequence","220137","uncultured Mollicutes bacterium",94.4,250,100,2.4956e-102,385.223,"Mollicutes",NA,NA,NA
+"Myco_2",4,"DQ917813","Uncultured Mycoplasma sp. clone BME4 16S ribosomal RNA gene, partial sequence","167967","uncultured Mycoplasma sp.",94.05,252,100,3.22827e-101,381.53,"Mollicutes","Mycoplasmatales","Mycoplasmataceae","Mycoplasma"
+"Myco_2",5,"DQ917846","Uncultured Mycoplasma sp. clone BME162 16S ribosomal RNA gene, partial sequence","167967","uncultured Mycoplasma sp.",93.23,251,100,2.51332e-97,368.604,"Mollicutes","Mycoplasmatales","Mycoplasmataceae","Mycoplasma"
+"Myco_2",6,"KX891441","Uncultured Mycoplasma sp. clone TTGE Band 42 16S ribosomal RNA gene, partial sequence","167967","uncultured Mycoplasma sp.",90.4,250,100,1.186e-85,329.824,"Mollicutes","Mycoplasmatales","Mycoplasmataceae","Mycoplasma"
+"Myco_2",7,"KY279607","Uncultured bacterium clone CP_Otu4545 16S ribosomal RNA gene, partial sequence","77133","uncultured bacterium",90,250,100,5.51791e-84,324.284,NA,NA,NA,NA
+"Myco_2",8,"HM173262","Uncultured bacterium clone 6206-B57 16S ribosomal RNA gene, partial sequence","77133","uncultured bacterium",97.77,179,71.6,1.54508e-79,309.511,NA,NA,NA,NA
+"Myco_2",9,"HM173253","Uncultured bacterium clone 6206-B44 16S ribosomal RNA gene, partial sequence","77133","uncultured bacterium",97.75,178,71.2,5.55708e-79,307.664,NA,NA,NA,NA
+"Myco_2",10,"DQ910147","Uncultured bacterium clone FS312_454_1000bp_1263B 16S ribosomal RNA gene, partial sequence","77133","uncultured bacterium",88.4,250,100,2.58546e-77,302.124,NA,NA,NA,NA
+"Myco_7",1,"KP174128","Uncultured Mycoplasma sp. clone OTU3 16S ribosomal RNA gene, partial sequence","167967","uncultured Mycoplasma sp.",97.6,250,100,1.13671e-115,429.543,"Mollicutes","Mycoplasmatales","Mycoplasmataceae","Mycoplasma"
+"Myco_7",2,"HM173254","Uncultured bacterium clone 6206-B93 16S ribosomal RNA gene, partial sequence","77133","uncultured bacterium",97.82,229,91.6,1.15291e-105,396.303,NA,NA,NA,NA
+"Myco_7",3,"JX966226","Uncultured Mollicutes bacterium clone M15 16S ribosomal RNA gene, partial sequence","220137","uncultured Mollicutes bacterium",94,250,100,1.16109e-100,379.683,"Mollicutes",NA,NA,NA
+"Myco_7",4,"DQ917813","Uncultured Mycoplasma sp. clone BME4 16S ribosomal RNA gene, partial sequence","167967","uncultured Mycoplasma sp.",93.65,252,100,1.50197e-99,375.99,"Mollicutes","Mycoplasmatales","Mycoplasmataceae","Mycoplasma"
+"Myco_7",5,"DQ917846","Uncultured Mycoplasma sp. clone BME162 16S ribosomal RNA gene, partial sequence","167967","uncultured Mycoplasma sp.",92.83,251,100,1.16933e-95,363.064,"Mollicutes","Mycoplasmatales","Mycoplasmataceae","Mycoplasma"
+"Myco_7",6,"KX891441","Uncultured Mycoplasma sp. clone TTGE Band 42 16S ribosomal RNA gene, partial sequence","167967","uncultured Mycoplasma sp.",90,250,100,5.51791e-84,324.284,"Mollicutes","Mycoplasmatales","Mycoplasmataceae","Mycoplasma"
+"Myco_7",7,"KY279607","Uncultured bacterium clone CP_Otu4545 16S ribosomal RNA gene, partial sequence","77133","uncultured bacterium",89.6,250,100,2.56723e-82,318.744,NA,NA,NA,NA
+"Myco_7",8,"HM173262","Uncultured bacterium clone 6206-B57 16S ribosomal RNA gene, partial sequence","77133","uncultured bacterium",97.77,179,71.6,1.54508e-79,309.511,NA,NA,NA,NA
+"Myco_7",9,"HM173253","Uncultured bacterium clone 6206-B44 16S ribosomal RNA gene, partial sequence","77133","uncultured bacterium",97.75,178,71.2,5.55708e-79,307.664,NA,NA,NA,NA
+"Myco_7",10,"DQ910147","Uncultured bacterium clone FS312_454_1000bp_1263B 16S ribosomal RNA gene, partial sequence","77133","uncultured bacterium",88.1,252,100,1.2029e-75,296.584,NA,NA,NA,NA
+"Myco_13",1,"KP174128","Uncultured Mycoplasma sp. clone OTU3 16S ribosomal RNA gene, partial sequence","167967","uncultured Mycoplasma sp.",97.6,250,100,1.13671e-115,429.543,"Mollicutes","Mycoplasmatales","Mycoplasmataceae","Mycoplasma"
+"Myco_13",2,"HM173254","Uncultured bacterium clone 6206-B93 16S ribosomal RNA gene, partial sequence","77133","uncultured bacterium",97.82,229,91.6,1.15291e-105,396.303,NA,NA,NA,NA
+"Myco_13",3,"JX966226","Uncultured Mollicutes bacterium clone M15 16S ribosomal RNA gene, partial sequence","220137","uncultured Mollicutes bacterium",94,250,100,1.16109e-100,379.683,"Mollicutes",NA,NA,NA
+"Myco_13",4,"DQ917813","Uncultured Mycoplasma sp. clone BME4 16S ribosomal RNA gene, partial sequence","167967","uncultured Mycoplasma sp.",93.65,252,100,1.50197e-99,375.99,"Mollicutes","Mycoplasmatales","Mycoplasmataceae","Mycoplasma"
+"Myco_13",5,"DQ917846","Uncultured Mycoplasma sp. clone BME162 16S ribosomal RNA gene, partial sequence","167967","uncultured Mycoplasma sp.",92.83,251,100,1.16933e-95,363.064,"Mollicutes","Mycoplasmatales","Mycoplasmataceae","Mycoplasma"
+"Myco_13",6,"KX891441","Uncultured Mycoplasma sp. clone TTGE Band 42 16S ribosomal RNA gene, partial sequence","167967","uncultured Mycoplasma sp.",90,250,100,5.51791e-84,324.284,"Mollicutes","Mycoplasmatales","Mycoplasmataceae","Mycoplasma"
+"Myco_13",7,"KY279607","Uncultured bacterium clone CP_Otu4545 16S ribosomal RNA gene, partial sequence","77133","uncultured bacterium",89.6,250,100,2.56723e-82,318.744,NA,NA,NA,NA
+"Myco_13",8,"HM173262","Uncultured bacterium clone 6206-B57 16S ribosomal RNA gene, partial sequence","77133","uncultured bacterium",97.21,179,71.6,7.18854e-78,303.971,NA,NA,NA,NA
+"Myco_13",9,"HM173253","Uncultured bacterium clone 6206-B44 16S ribosomal RNA gene, partial sequence","77133","uncultured bacterium",97.19,178,71.2,2.58546e-77,302.124,NA,NA,NA,NA
+"Myco_13",10,"DQ910147","Uncultured bacterium clone FS312_454_1000bp_1263B 16S ribosomal RNA gene, partial sequence","77133","uncultured bacterium",88,250,100,1.2029e-75,296.584,NA,NA,NA,NA
+"Myco_14",1,"KP174128","Uncultured Mycoplasma sp. clone OTU3 16S ribosomal RNA gene, partial sequence","167967","uncultured Mycoplasma sp.",97.6,250,100,1.13671e-115,429.543,"Mollicutes","Mycoplasmatales","Mycoplasmataceae","Mycoplasma"
+"Myco_14",2,"HM173254","Uncultured bacterium clone 6206-B93 16S ribosomal RNA gene, partial sequence","77133","uncultured bacterium",97.82,229,91.6,1.15291e-105,396.303,NA,NA,NA,NA
+"Myco_14",3,"JX966226","Uncultured Mollicutes bacterium clone M15 16S ribosomal RNA gene, partial sequence","220137","uncultured Mollicutes bacterium",94,250,100,1.16109e-100,379.683,"Mollicutes",NA,NA,NA
+"Myco_14",4,"DQ917813","Uncultured Mycoplasma sp. clone BME4 16S ribosomal RNA gene, partial sequence","167967","uncultured Mycoplasma sp.",93.65,252,100,1.50197e-99,375.99,"Mollicutes","Mycoplasmatales","Mycoplasmataceae","Mycoplasma"
+"Myco_14",5,"DQ917846","Uncultured Mycoplasma sp. clone BME162 16S ribosomal RNA gene, partial sequence","167967","uncultured Mycoplasma sp.",92.83,251,100,1.16933e-95,363.064,"Mollicutes","Mycoplasmatales","Mycoplasmataceae","Mycoplasma"
+"Myco_14",6,"KX891441","Uncultured Mycoplasma sp. clone TTGE Band 42 16S ribosomal RNA gene, partial sequence","167967","uncultured Mycoplasma sp.",90,250,100,5.51791e-84,324.284,"Mollicutes","Mycoplasmatales","Mycoplasmataceae","Mycoplasma"
+"Myco_14",7,"KY279607","Uncultured bacterium clone CP_Otu4545 16S ribosomal RNA gene, partial sequence","77133","uncultured bacterium",89.6,250,100,2.56723e-82,318.744,NA,NA,NA,NA
+"Myco_14",8,"HM173262","Uncultured bacterium clone 6206-B57 16S ribosomal RNA gene, partial sequence","77133","uncultured bacterium",97.77,179,71.6,1.54508e-79,309.511,NA,NA,NA,NA
+"Myco_14",9,"HM173253","Uncultured bacterium clone 6206-B44 16S ribosomal RNA gene, partial sequence","77133","uncultured bacterium",97.75,178,71.2,5.55708e-79,307.664,NA,NA,NA,NA
+"Myco_14",10,"DQ910147","Uncultured bacterium clone FS312_454_1000bp_1263B 16S ribosomal RNA gene, partial sequence","77133","uncultured bacterium",88,250,100,1.2029e-75,296.584,NA,NA,NA,NA
+"Myco_17",1,"OW944416","uncultured Mycoplasmataceae bacterium DNA containing 16S-23S intergenic spacer region, clone 43","300027","uncultured Mycoplasmataceae bacterium",100,251,100,3.13056e-126,464.629,"Mollicutes","Mycoplasmatales","Mycoplasmataceae",NA
+"Myco_17",2,"OW836340","uncultured fungus genomic DNA sequence contains ITS1","175245","uncultured fungus",100,251,100,3.13056e-126,464.629,NA,NA,NA,NA
+"Myco_17",3,"OW834016","uncultured fungus genomic DNA sequence contains ITS1","175245","uncultured fungus",100,251,100,3.13056e-126,464.629,NA,NA,NA,NA
+"Myco_17",4,"KY252836","Uncultured bacterium clone js2072 16S ribosomal RNA gene, partial sequence","77133","uncultured bacterium",100,251,100,3.13056e-126,464.629,NA,NA,NA,NA
+"Myco_17",5,"KP953329","Uncultured bacterium clone I3Q1XXJ01AUBZM 16S ribosomal RNA gene, partial sequence","77133","uncultured bacterium",100,251,100,3.13056e-126,464.629,NA,NA,NA,NA
+"Myco_17",6,"KP952278","Uncultured bacterium clone I3Q1XXJ02B89S3 16S ribosomal RNA gene, partial sequence","77133","uncultured bacterium",100,251,100,3.13056e-126,464.629,NA,NA,NA,NA
+"Myco_17",7,"PV208389","Mollicutes bacterium SLUWU-24 16S ribosomal RNA gene, partial sequence","3402861","Mollicutes bacterium SLUWU-24",100,251,100,3.13056e-126,464.629,"Mollicutes",NA,NA,NA
+"Myco_17",8,"OW834298","uncultured fungus genomic DNA sequence contains ITS1","175245","uncultured fungus",100,251,100,3.13056e-126,464.629,NA,NA,NA,NA
+"Myco_17",9,"KP951764","Uncultured bacterium clone I3Q1XXJ01AX2OX 16S ribosomal RNA gene, partial sequence","77133","uncultured bacterium",100,251,100,3.13056e-126,464.629,NA,NA,NA,NA
+"Myco_17",10,"KP947194","Uncultured bacterium clone IZ1RPV403CXVV2 16S ribosomal RNA gene, partial sequence","77133","uncultured bacterium",100,251,100,3.13056e-126,464.629,NA,NA,NA,NA
+"Myco_20",1,"KU676839","Uncultured bacterium clone SEAS_2510 16S ribosomal RNA gene, partial sequence","77133","uncultured bacterium",96.81,251,100,6.87304e-113,420.31,NA,NA,NA,NA
+"Myco_20",2,"KC189779","Uncultured bacterium clone Wat93 16S ribosomal RNA gene, partial sequence","77133","uncultured bacterium",96.81,251,100,6.87304e-113,420.31,NA,NA,NA,NA
+"Myco_20",3,"FJ228791","Uncultured bacterium clone Bul1af06 16S ribosomal RNA gene, partial sequence","77133","uncultured bacterium",95.6,250,99.6,2.48953e-107,401.843,NA,NA,NA,NA
+"Myco_20",4,"KU675937","Uncultured bacterium clone SEAS_1283 16S ribosomal RNA gene, partial sequence","77133","uncultured bacterium",94.82,251,100,1.49831e-104,392.61,NA,NA,NA,NA
+"Myco_20",5,"KY275743","Uncultured bacterium clone CP_Otu263 16S ribosomal RNA gene, partial sequence","77133","uncultured bacterium",94.42,251,100,6.97098e-103,387.07,NA,NA,NA,NA
+"Myco_20",6,"FM995177","Uncultured bacterium partial 16S rRNA gene, isolate SRODG012","77133","uncultured bacterium",94.42,251,100,6.97098e-103,387.07,NA,NA,NA,NA
+"Myco_20",7,"KC358014","Uncultured bacterium clone FAIR_SPR_02C 16S ribosomal RNA gene, partial sequence","77133","uncultured bacterium",94.02,251,100,3.24328e-101,381.53,NA,NA,NA,NA
+"Myco_20",8,"JF827405","Uncultured bacterium clone 44G2 16S ribosomal RNA gene, partial sequence","77133","uncultured bacterium",94.02,251,100,3.24328e-101,381.53,NA,NA,NA,NA
+"Myco_20",9,"KX971257","Uncultured bacterium clone OTU_3687 16S ribosomal RNA gene, partial sequence","77133","uncultured bacterium",96.41,223,88.8,2.52501e-97,368.604,NA,NA,NA,NA
+"Myco_20",10,"KX973698","Uncultured bacterium clone OTU_6268 16S ribosomal RNA gene, partial sequence","77133","uncultured bacterium",94.17,223,88.8,5.50449e-89,340.904,NA,NA,NA,NA
+"Myco_21",1,"KP174128","Uncultured Mycoplasma sp. clone OTU3 16S ribosomal RNA gene, partial sequence","167967","uncultured Mycoplasma sp.",97.6,250,100,1.13671e-115,429.543,"Mollicutes","Mycoplasmatales","Mycoplasmataceae","Mycoplasma"
+"Myco_21",2,"HM173254","Uncultured bacterium clone 6206-B93 16S ribosomal RNA gene, partial sequence","77133","uncultured bacterium",97.82,229,91.6,1.15291e-105,396.303,NA,NA,NA,NA
+"Myco_21",3,"DQ917813","Uncultured Mycoplasma sp. clone BME4 16S ribosomal RNA gene, partial sequence","167967","uncultured Mycoplasma sp.",94.05,252,100,3.22827e-101,381.53,"Mollicutes","Mycoplasmatales","Mycoplasmataceae","Mycoplasma"
+"Myco_21",4,"JX966226","Uncultured Mollicutes bacterium clone M15 16S ribosomal RNA gene, partial sequence","220137","uncultured Mollicutes bacterium",94,250,100,1.16109e-100,379.683,"Mollicutes",NA,NA,NA
+"Myco_21",5,"DQ917846","Uncultured Mycoplasma sp. clone BME162 16S ribosomal RNA gene, partial sequence","167967","uncultured Mycoplasma sp.",92.83,251,100,1.16933e-95,363.064,"Mollicutes","Mycoplasmatales","Mycoplasmataceae","Mycoplasma"
+"Myco_21",6,"KX891441","Uncultured Mycoplasma sp. clone TTGE Band 42 16S ribosomal RNA gene, partial sequence","167967","uncultured Mycoplasma sp.",90,250,100,5.51791e-84,324.284,"Mollicutes","Mycoplasmatales","Mycoplasmataceae","Mycoplasma"
+"Myco_21",7,"KY279607","Uncultured bacterium clone CP_Otu4545 16S ribosomal RNA gene, partial sequence","77133","uncultured bacterium",89.6,250,100,2.56723e-82,318.744,NA,NA,NA,NA
+"Myco_21",8,"HM173262","Uncultured bacterium clone 6206-B57 16S ribosomal RNA gene, partial sequence","77133","uncultured bacterium",97.21,179,71.6,7.18854e-78,303.971,NA,NA,NA,NA
+"Myco_21",9,"HM173253","Uncultured bacterium clone 6206-B44 16S ribosomal RNA gene, partial sequence","77133","uncultured bacterium",97.19,178,71.2,2.58546e-77,302.124,NA,NA,NA,NA
+"Myco_21",10,"DQ910147","Uncultured bacterium clone FS312_454_1000bp_1263B 16S ribosomal RNA gene, partial sequence","77133","uncultured bacterium",88,250,100,1.2029e-75,296.584,NA,NA,NA,NA
+"Myco_22",1,"HQ393436","Uncultured bacterium clone frc75 16S ribosomal RNA gene, partial sequence","77133","uncultured bacterium",90.8,250,100,9.16832e-87,333.517,NA,NA,NA,NA
+"Myco_22",2,"HE648941","Uncultured Mycoplasma sp. partial 16S rRNA gene, clone TZ170.27","167967","uncultured Mycoplasma sp.",90,250,100,5.51791e-84,324.284,"Mollicutes","Mycoplasmatales","Mycoplasmataceae","Mycoplasma"
+"Myco_22",3,"JF521606","Uncultured Mycoplasma sp. clone MX19.9 16S ribosomal RNA gene, partial sequence","167967","uncultured Mycoplasma sp.",90,250,100,5.51791e-84,324.284,"Mollicutes","Mycoplasmatales","Mycoplasmataceae","Mycoplasma"
+"Myco_22",4,"DQ910085","Uncultured bacterium clone FS312_454_1000bp_0993B 16S ribosomal RNA gene, partial sequence","77133","uncultured bacterium",90.04,251,100,5.51791e-84,324.284,NA,NA,NA,NA
+"Myco_22",5,"JF521605","Uncultured Mycoplasma sp. clone MX263.1 16S ribosomal RNA gene, partial sequence","167967","uncultured Mycoplasma sp.",89.64,251,100,2.56723e-82,318.744,"Mollicutes","Mycoplasmatales","Mycoplasmataceae","Mycoplasma"
+"Myco_22",6,"OP047975","Uncultured bacterium clone B4Trans72_27FHT.ab1 16S ribosomal RNA gene, partial sequence","77133","uncultured bacterium",89.24,251,100,1.19442e-80,313.204,NA,NA,NA,NA
+"Myco_22",7,"OP047962","Uncultured bacterium clone 3027115_B48027FHT_G2_861_1349_32_919 16S ribosomal RNA gene, partial sequence","77133","uncultured bacterium",89.24,251,100,1.19442e-80,313.204,NA,NA,NA,NA
+"Myco_22",8,"OP047961","Uncultured bacterium clone 3027114_B47827FHT_F2_827_1356_37_843 16S ribosomal RNA gene, partial sequence","77133","uncultured bacterium",89.24,251,100,1.19442e-80,313.204,NA,NA,NA,NA
+"Myco_22",9,"OP047960","Uncultured bacterium clone 3027113_B47727FHT_E2_826_1432_30_828 16S ribosomal RNA gene, partial sequence","77133","uncultured bacterium",89.2,250,100,1.19442e-80,313.204,NA,NA,NA,NA
+"Myco_22",10,"OP047958","Uncultured bacterium clone 3027111_B47527FHT_C2_852_1426_29_890 16S ribosomal RNA gene, partial sequence","77133","uncultured bacterium",89.24,251,100,1.19442e-80,313.204,NA,NA,NA,NA
+"Myco_23",1,"KP174128","Uncultured Mycoplasma sp. clone OTU3 16S ribosomal RNA gene, partial sequence","167967","uncultured Mycoplasma sp.",97.6,250,100,1.13671e-115,429.543,"Mollicutes","Mycoplasmatales","Mycoplasmataceae","Mycoplasma"
+"Myco_23",2,"HM173254","Uncultured bacterium clone 6206-B93 16S ribosomal RNA gene, partial sequence","77133","uncultured bacterium",97.82,229,91.6,1.15291e-105,396.303,NA,NA,NA,NA
+"Myco_23",3,"JX966226","Uncultured Mollicutes bacterium clone M15 16S ribosomal RNA gene, partial sequence","220137","uncultured Mollicutes bacterium",94,250,100,1.16109e-100,379.683,"Mollicutes",NA,NA,NA
+"Myco_23",4,"DQ917813","Uncultured Mycoplasma sp. clone BME4 16S ribosomal RNA gene, partial sequence","167967","uncultured Mycoplasma sp.",93.65,252,100,1.50197e-99,375.99,"Mollicutes","Mycoplasmatales","Mycoplasmataceae","Mycoplasma"
+"Myco_23",5,"DQ917846","Uncultured Mycoplasma sp. clone BME162 16S ribosomal RNA gene, partial sequence","167967","uncultured Mycoplasma sp.",92.83,251,100,1.16933e-95,363.064,"Mollicutes","Mycoplasmatales","Mycoplasmataceae","Mycoplasma"
+"Myco_23",6,"KX891441","Uncultured Mycoplasma sp. clone TTGE Band 42 16S ribosomal RNA gene, partial sequence","167967","uncultured Mycoplasma sp.",90,250,100,5.51791e-84,324.284,"Mollicutes","Mycoplasmatales","Mycoplasmataceae","Mycoplasma"
+"Myco_23",7,"KY279607","Uncultured bacterium clone CP_Otu4545 16S ribosomal RNA gene, partial sequence","77133","uncultured bacterium",89.6,250,100,2.56723e-82,318.744,NA,NA,NA,NA
+"Myco_23",8,"HM173262","Uncultured bacterium clone 6206-B57 16S ribosomal RNA gene, partial sequence","77133","uncultured bacterium",97.21,179,71.6,7.18854e-78,303.971,NA,NA,NA,NA
+"Myco_23",9,"HM173253","Uncultured bacterium clone 6206-B44 16S ribosomal RNA gene, partial sequence","77133","uncultured bacterium",97.19,178,71.2,2.58546e-77,302.124,NA,NA,NA,NA
+"Myco_23",10,"DQ910147","Uncultured bacterium clone FS312_454_1000bp_1263B 16S ribosomal RNA gene, partial sequence","77133","uncultured bacterium",88.45,251,100,2.58546e-77,302.124,NA,NA,NA,NA
+"Myco_24",1,"HM630211","Uncultured bacterium clone NT4_C21 16S ribosomal RNA gene, partial sequence","77133","uncultured bacterium",95.2,250,100,1.15291e-105,396.303,NA,NA,NA,NA
+"Myco_24",2,"HM630186","Uncultured bacterium clone NT2_C104 16S ribosomal RNA gene, partial sequence","77133","uncultured bacterium",95.2,250,100,1.15291e-105,396.303,NA,NA,NA,NA
+"Myco_24",3,"MN955329","Uncultured Ureaplasma sp. clone OTU_439 16S ribosomal RNA gene, partial sequence","293430","uncultured Ureaplasma sp.",91.2,250,100,5.47901e-89,340.904,NA,"Mycoplasmoidales","Mycoplasmoidaceae","Ureaplasma"
+"Myco_24",4,"MH245138","Uncultured Mycoplasma sp. clone A70 16S ribosomal RNA gene, partial sequence","167967","uncultured Mycoplasma sp.",90.8,250,100,2.54913e-87,335.364,"Mollicutes","Mycoplasmatales","Mycoplasmataceae","Mycoplasma"
+"Myco_24",5,"JQ191198","Uncultured bacterium clone Capln1_5F05 16S ribosomal RNA gene, partial sequence","77133","uncultured bacterium",90.8,250,100,2.54913e-87,335.364,NA,NA,NA,NA
+"Myco_24",6,"HM031446","Uncultured Mycoplasma sp. clone K.b-1 16S ribosomal RNA gene, partial sequence","167967","uncultured Mycoplasma sp.",90.8,250,100,2.54913e-87,335.364,"Mollicutes","Mycoplasmatales","Mycoplasmataceae","Mycoplasma"
+"Myco_24",7,"MW647535","Uncultured bacterium clone 16 16S ribosomal RNA gene, partial sequence","77133","uncultured bacterium",90.4,250,100,1.186e-85,329.824,NA,NA,NA,NA
+"Myco_24",8,"MN955326","Uncultured Ureaplasma sp. clone OTU_1 16S ribosomal RNA gene, partial sequence","293430","uncultured Ureaplasma sp.",90.4,250,100,1.186e-85,329.824,NA,"Mycoplasmoidales","Mycoplasmoidaceae","Ureaplasma"
+"Myco_24",9,"MG858257","Uncultured bacterium clone OTU420_L_2_F7_521352 16S ribosomal RNA gene, partial sequence","77133","uncultured bacterium",90.44,251,100,1.186e-85,329.824,NA,NA,NA,NA
+"Myco_24",10,"AB893931","Uncultured bacterium gene for 16S ribosomal RNA, partial sequence, clone: #5-10","77133","uncultured bacterium",90.4,250,100,1.186e-85,329.824,NA,NA,NA,NA
+"Myco_25",1,"KP174128","Uncultured Mycoplasma sp. clone OTU3 16S ribosomal RNA gene, partial sequence","167967","uncultured Mycoplasma sp.",97.6,250,100,1.13671e-115,429.543,"Mollicutes","Mycoplasmatales","Mycoplasmataceae","Mycoplasma"
+"Myco_25",2,"HM173254","Uncultured bacterium clone 6206-B93 16S ribosomal RNA gene, partial sequence","77133","uncultured bacterium",97.82,229,91.6,1.15291e-105,396.303,NA,NA,NA,NA
+"Myco_25",3,"JX966226","Uncultured Mollicutes bacterium clone M15 16S ribosomal RNA gene, partial sequence","220137","uncultured Mollicutes bacterium",94,250,100,1.16109e-100,379.683,"Mollicutes",NA,NA,NA
+"Myco_25",4,"DQ917813","Uncultured Mycoplasma sp. clone BME4 16S ribosomal RNA gene, partial sequence","167967","uncultured Mycoplasma sp.",93.65,252,100,1.50197e-99,375.99,"Mollicutes","Mycoplasmatales","Mycoplasmataceae","Mycoplasma"
+"Myco_25",5,"DQ917846","Uncultured Mycoplasma sp. clone BME162 16S ribosomal RNA gene, partial sequence","167967","uncultured Mycoplasma sp.",92.83,251,100,1.16933e-95,363.064,"Mollicutes","Mycoplasmatales","Mycoplasmataceae","Mycoplasma"
+"Myco_25",6,"KX891441","Uncultured Mycoplasma sp. clone TTGE Band 42 16S ribosomal RNA gene, partial sequence","167967","uncultured Mycoplasma sp.",90,250,100,5.51791e-84,324.284,"Mollicutes","Mycoplasmatales","Mycoplasmataceae","Mycoplasma"
+"Myco_25",7,"KY279607","Uncultured bacterium clone CP_Otu4545 16S ribosomal RNA gene, partial sequence","77133","uncultured bacterium",89.6,250,100,2.56723e-82,318.744,NA,NA,NA,NA
+"Myco_25",8,"HM173262","Uncultured bacterium clone 6206-B57 16S ribosomal RNA gene, partial sequence","77133","uncultured bacterium",97.21,179,71.6,7.18854e-78,303.971,NA,NA,NA,NA
+"Myco_25",9,"HM173253","Uncultured bacterium clone 6206-B44 16S ribosomal RNA gene, partial sequence","77133","uncultured bacterium",97.19,178,71.2,2.58546e-77,302.124,NA,NA,NA,NA
+"Myco_25",10,"DQ910147","Uncultured bacterium clone FS312_454_1000bp_1263B 16S ribosomal RNA gene, partial sequence","77133","uncultured bacterium",88,250,100,1.2029e-75,296.584,NA,NA,NA,NA
+"Myco_26",1,"KT912969","Uncultured bacterium clone 10830 16S ribosomal RNA gene, partial sequence","77133","uncultured bacterium",94.42,251,100,6.97098e-103,387.07,NA,NA,NA,NA
+"Myco_26",2,"LC686978","Uncultured bacterium ZOTU17 gene for 16S rRNA, partial sequence","77133","uncultured bacterium",94.02,251,100,3.24328e-101,381.53,NA,NA,NA,NA
+"Myco_26",3,"KY125761","Uncultured bacterium clone A494_Bac1161 16S ribosomal RNA gene, partial sequence","77133","uncultured bacterium",94.02,251,100,3.24328e-101,381.53,NA,NA,NA,NA
+"Myco_26",4,"KP919178","Uncultured bacterium clone OTU130876_AL227_225792 16S ribosomal RNA gene, partial sequence","77133","uncultured bacterium",94.02,251,100,3.24328e-101,381.53,NA,NA,NA,NA
+"Myco_26",5,"JN117223","Uncultured bacterium clone PE7-0-56 16S ribosomal RNA gene, partial sequence","77133","uncultured bacterium",93.63,251,100,1.50895e-99,375.99,NA,NA,NA,NA
+"Myco_26",6,"OM526937","Uncultured bacterium clone OTU1326 16S ribosomal RNA gene, partial sequence","77133","uncultured bacterium",92.83,251,100,3.26631e-96,364.91,NA,NA,NA,NA
+"Myco_26",7,"MZ229986","Uncultured Bacillota bacterium clone G - Unbinned 16S ribosomal RNA gene, partial sequence","344338","uncultured Bacillota bacterium",92.83,251,100,3.26631e-96,364.91,NA,NA,NA,NA
+"Myco_26",8,"MF367371","Uncultured bacterium clone New.OTU11832_1 16S ribosomal RNA gene, partial sequence","77133","uncultured bacterium",92.83,251,100,3.26631e-96,364.91,NA,NA,NA,NA
+"Myco_26",9,"KU677550","Uncultured bacterium clone SEAS_3894 16S ribosomal RNA gene, partial sequence","77133","uncultured bacterium",92.83,251,100,3.26631e-96,364.91,NA,NA,NA,NA
+"Myco_26",10,"HQ847999","Uncultured bacterium clone G10F 16S ribosomal RNA gene, partial sequence","77133","uncultured bacterium",92.83,251,100,3.26631e-96,364.91,NA,NA,NA,NA
+"Myco_29",1,"OM526937","Uncultured bacterium clone OTU1326 16S ribosomal RNA gene, partial sequence","77133","uncultured bacterium",96.02,251,100,1.48775e-109,409.23,NA,NA,NA,NA
+"Myco_29",2,"KP952586","Uncultured bacterium clone I3Q1XXJ02CGWIE 16S ribosomal RNA gene, partial sequence","77133","uncultured bacterium",95.22,251,100,1.15827e-105,396.303,NA,NA,NA,NA
+"Myco_29",3,"OW944416","uncultured Mycoplasmataceae bacterium DNA containing 16S-23S intergenic spacer region, clone 43","300027","uncultured Mycoplasmataceae bacterium",94.42,251,100,6.97098e-103,387.07,"Mollicutes","Mycoplasmatales","Mycoplasmataceae",NA
+"Myco_29",4,"OW836340","uncultured fungus genomic DNA sequence contains ITS1","175245","uncultured fungus",94.42,251,100,6.97098e-103,387.07,NA,NA,NA,NA
+"Myco_29",5,"OW834016","uncultured fungus genomic DNA sequence contains ITS1","175245","uncultured fungus",94.42,251,100,6.97098e-103,387.07,NA,NA,NA,NA
+"Myco_29",6,"KY252836","Uncultured bacterium clone js2072 16S ribosomal RNA gene, partial sequence","77133","uncultured bacterium",94.42,251,100,6.97098e-103,387.07,NA,NA,NA,NA
+"Myco_29",7,"KP953329","Uncultured bacterium clone I3Q1XXJ01AUBZM 16S ribosomal RNA gene, partial sequence","77133","uncultured bacterium",94.42,251,100,6.97098e-103,387.07,NA,NA,NA,NA
+"Myco_29",8,"KP952278","Uncultured bacterium clone I3Q1XXJ02B89S3 16S ribosomal RNA gene, partial sequence","77133","uncultured bacterium",94.42,251,100,6.97098e-103,387.07,NA,NA,NA,NA
+"Myco_29",9,"PV208389","Mollicutes bacterium SLUWU-24 16S ribosomal RNA gene, partial sequence","3402861","Mollicutes bacterium SLUWU-24",94.42,251,100,6.97098e-103,387.07,"Mollicutes",NA,NA,NA
+"Myco_29",10,"OW834298","uncultured fungus genomic DNA sequence contains ITS1","175245","uncultured fungus",94.42,251,100,6.97098e-103,387.07,NA,NA,NA,NA
+"Myco_30",1,"CP136956","Mollicutes bacterium LVI A0078 chromosome, complete genome","3081165","Mollicutes bacterium LVI A0078",97.61,251,100,3.17517e-116,431.39,"Mollicutes",NA,NA,NA
+"Myco_30",2,"OW835275","uncultured fungus genomic DNA sequence contains ITS1","175245","uncultured fungus",97.61,251,100,3.17517e-116,431.39,NA,NA,NA,NA
+"Myco_30",3,"OW944417","uncultured Mycoplasmataceae bacterium DNA containing 16S-23S intergenic spacer region, clone 43","300027","uncultured Mycoplasmataceae bacterium",97.61,251,100,3.17517e-116,431.39,"Mollicutes","Mycoplasmatales","Mycoplasmataceae",NA
+"Myco_30",4,"CP136954","Mollicutes bacterium LVI A0075 chromosome, complete genome","3081164","Mollicutes bacterium LVI A0075",97.61,251,100,3.17517e-116,431.39,"Mollicutes",NA,NA,NA
+"Myco_30",5,"KY300656","Uncultured bacterium clone denovo74182 16S ribosomal RNA gene, partial sequence","77133","uncultured bacterium",97.61,251,100,3.17517e-116,431.39,NA,NA,NA,NA
+"Myco_30",6,"KP948021","Uncultured bacterium clone IZ1RPV403C9AAU 16S ribosomal RNA gene, partial sequence","77133","uncultured bacterium",97.61,251,100,3.17517e-116,431.39,NA,NA,NA,NA
+"Myco_30",7,"KP948220","Uncultured bacterium clone IZ1RPV403DGXX7 16S ribosomal RNA gene, partial sequence","77133","uncultured bacterium",97.61,251,100,3.17517e-116,431.39,NA,NA,NA,NA
+"Myco_30",8,"KP947922","Uncultured bacterium clone IZ1RPV403DAB0T 16S ribosomal RNA gene, partial sequence","77133","uncultured bacterium",97.61,251,100,3.17517e-116,431.39,NA,NA,NA,NA
+"Myco_30",9,"KP947270","Uncultured bacterium clone IZ1RPV403C07BW 16S ribosomal RNA gene, partial sequence","77133","uncultured bacterium",97.61,251,100,3.17517e-116,431.39,NA,NA,NA,NA
+"Myco_30",10,"KP946697","Uncultured bacterium clone IZ1RPV403CV9JL 16S ribosomal RNA gene, partial sequence","77133","uncultured bacterium",97.61,251,100,3.17517e-116,431.39,NA,NA,NA,NA
+"Myco_31",1,"OW944416","uncultured Mycoplasmataceae bacterium DNA containing 16S-23S intergenic spacer region, clone 43","300027","uncultured Mycoplasmataceae bacterium",99.6,251,100,1.45651e-124,459.089,"Mollicutes","Mycoplasmatales","Mycoplasmataceae",NA
+"Myco_31",2,"OW836340","uncultured fungus genomic DNA sequence contains ITS1","175245","uncultured fungus",99.6,251,100,1.45651e-124,459.089,NA,NA,NA,NA
+"Myco_31",3,"OW834016","uncultured fungus genomic DNA sequence contains ITS1","175245","uncultured fungus",99.6,251,100,1.45651e-124,459.089,NA,NA,NA,NA
+"Myco_31",4,"KY252836","Uncultured bacterium clone js2072 16S ribosomal RNA gene, partial sequence","77133","uncultured bacterium",99.6,251,100,1.45651e-124,459.089,NA,NA,NA,NA
+"Myco_31",5,"KP953329","Uncultured bacterium clone I3Q1XXJ01AUBZM 16S ribosomal RNA gene, partial sequence","77133","uncultured bacterium",99.6,251,100,1.45651e-124,459.089,NA,NA,NA,NA
+"Myco_31",6,"KP952278","Uncultured bacterium clone I3Q1XXJ02B89S3 16S ribosomal RNA gene, partial sequence","77133","uncultured bacterium",99.6,251,100,1.45651e-124,459.089,NA,NA,NA,NA
+"Myco_31",7,"PV208389","Mollicutes bacterium SLUWU-24 16S ribosomal RNA gene, partial sequence","3402861","Mollicutes bacterium SLUWU-24",99.6,251,100,1.45651e-124,459.089,"Mollicutes",NA,NA,NA
+"Myco_31",8,"OW834298","uncultured fungus genomic DNA sequence contains ITS1","175245","uncultured fungus",99.6,251,100,1.45651e-124,459.089,NA,NA,NA,NA
+"Myco_31",9,"KP951764","Uncultured bacterium clone I3Q1XXJ01AX2OX 16S ribosomal RNA gene, partial sequence","77133","uncultured bacterium",99.6,251,100,1.45651e-124,459.089,NA,NA,NA,NA
+"Myco_31",10,"KP947194","Uncultured bacterium clone IZ1RPV403CXVV2 16S ribosomal RNA gene, partial sequence","77133","uncultured bacterium",99.6,251,100,1.45651e-124,459.089,NA,NA,NA,NA
+"Myco_32",1,"GQ866067","Uncultured bacterium clone Se3-204 16S ribosomal RNA gene, partial sequence","77133","uncultured bacterium",98.8,251,100,3.15279e-121,448.01,NA,NA,NA,NA
+"Myco_32",2,"OW944416","uncultured Mycoplasmataceae bacterium DNA containing 16S-23S intergenic spacer region, clone 43","300027","uncultured Mycoplasmataceae bacterium",98.41,251,100,1.46685e-119,442.47,"Mollicutes","Mycoplasmatales","Mycoplasmataceae",NA
+"Myco_32",3,"OW836340","uncultured fungus genomic DNA sequence contains ITS1","175245","uncultured fungus",98.41,251,100,1.46685e-119,442.47,NA,NA,NA,NA
+"Myco_32",4,"OW834016","uncultured fungus genomic DNA sequence contains ITS1","175245","uncultured fungus",98.41,251,100,1.46685e-119,442.47,NA,NA,NA,NA
+"Myco_32",5,"KY252836","Uncultured bacterium clone js2072 16S ribosomal RNA gene, partial sequence","77133","uncultured bacterium",98.41,251,100,1.46685e-119,442.47,NA,NA,NA,NA
+"Myco_32",6,"KP953329","Uncultured bacterium clone I3Q1XXJ01AUBZM 16S ribosomal RNA gene, partial sequence","77133","uncultured bacterium",98.41,251,100,1.46685e-119,442.47,NA,NA,NA,NA
+"Myco_32",7,"KP952278","Uncultured bacterium clone I3Q1XXJ02B89S3 16S ribosomal RNA gene, partial sequence","77133","uncultured bacterium",98.41,251,100,1.46685e-119,442.47,NA,NA,NA,NA
+"Myco_32",8,"PV208389","Mollicutes bacterium SLUWU-24 16S ribosomal RNA gene, partial sequence","3402861","Mollicutes bacterium SLUWU-24",98.41,251,100,1.46685e-119,442.47,"Mollicutes",NA,NA,NA
+"Myco_32",9,"KP951764","Uncultured bacterium clone I3Q1XXJ01AX2OX 16S ribosomal RNA gene, partial sequence","77133","uncultured bacterium",98.41,251,100,1.46685e-119,442.47,NA,NA,NA,NA
+"Myco_32",10,"KP947194","Uncultured bacterium clone IZ1RPV403CXVV2 16S ribosomal RNA gene, partial sequence","77133","uncultured bacterium",98.41,251,100,1.46685e-119,442.47,NA,NA,NA,NA
+"Myco_33",1,"FJ203048","Uncultured bacterium clone SHFG431 16S ribosomal RNA gene, partial sequence","77133","uncultured bacterium",87.04,247,98.8,1.21144e-70,279.964,NA,NA,NA,NA
+"Myco_33",2,"FN553940","Uncultured sediment bacterium 16S rRNA gene, clone 257-24","676241","uncultured sediment bacterium",81.93,249,98.8,5.79804e-49,207.945,NA,NA,NA,NA
+"Myco_33",3,"KY281001","Uncultured bacterium clone CP_Otu6077 16S ribosomal RNA gene, partial sequence","77133","uncultured bacterium",81.12,249,98.8,1.25506e-45,196.865,NA,NA,NA,NA
+"Myco_33",4,"KM650321","Uncultured Firmicutes bacterium clone Pa166_038 16S ribosomal RNA gene, partial sequence","344338","uncultured Bacillota bacterium",80.39,255,100,2.71672e-42,185.785,NA,NA,NA,NA
+"Myco_33",5,"LC420267","Uncultured bacterium gene for 16S ribosomal RNA, partial sequence, clone: PaNL03-13","77133","uncultured bacterium",79.76,252,100,1.26397e-40,180.245,NA,NA,NA,NA
+"Myco_33",6,"KT913917","Uncultured bacterium clone 13557 16S ribosomal RNA gene, partial sequence","77133","uncultured bacterium",80.42,240,95.2,1.26397e-40,180.245,NA,NA,NA,NA
+"Myco_33",7,"LT842676","Uncultured bacterium partial 16S rRNA gene, isolate BACT_OTU_2013","77133","uncultured bacterium",79.76,252,98.8,5.88066e-39,174.705,NA,NA,NA,NA
+"Myco_33",8,"LT842572","Uncultured bacterium partial 16S rRNA gene, isolate BACT_OTU_1099","77133","uncultured bacterium",79.61,255,100,5.88066e-39,174.705,NA,NA,NA,NA
+"Myco_33",9,"KY049075","Uncultured bacterium clone OTU622 16S ribosomal RNA gene, partial sequence","77133","uncultured bacterium",79.76,252,98.8,5.88066e-39,174.705,NA,NA,NA,NA
+"Myco_33",10,"KT053130","Uncultured prokaryote clone 15377 16S ribosomal RNA gene, partial sequence","198431","uncultured prokaryote",79.76,252,98.8,5.88066e-39,174.705,NA,NA,NA,NA
+"Myco_34",1,"GQ866067","Uncultured bacterium clone Se3-204 16S ribosomal RNA gene, partial sequence","77133","uncultured bacterium",98.01,251,100,6.82459e-118,436.93,NA,NA,NA,NA
+"Myco_34",2,"OW944416","uncultured Mycoplasmataceae bacterium DNA containing 16S-23S intergenic spacer region, clone 43","300027","uncultured Mycoplasmataceae bacterium",97.61,251,100,3.17517e-116,431.39,"Mollicutes","Mycoplasmatales","Mycoplasmataceae",NA
+"Myco_34",3,"OW836340","uncultured fungus genomic DNA sequence contains ITS1","175245","uncultured fungus",97.61,251,100,3.17517e-116,431.39,NA,NA,NA,NA
+"Myco_34",4,"OW834016","uncultured fungus genomic DNA sequence contains ITS1","175245","uncultured fungus",97.61,251,100,3.17517e-116,431.39,NA,NA,NA,NA
+"Myco_34",5,"KY252836","Uncultured bacterium clone js2072 16S ribosomal RNA gene, partial sequence","77133","uncultured bacterium",97.61,251,100,3.17517e-116,431.39,NA,NA,NA,NA
+"Myco_34",6,"KP953329","Uncultured bacterium clone I3Q1XXJ01AUBZM 16S ribosomal RNA gene, partial sequence","77133","uncultured bacterium",97.61,251,100,3.17517e-116,431.39,NA,NA,NA,NA
+"Myco_34",7,"KP952278","Uncultured bacterium clone I3Q1XXJ02B89S3 16S ribosomal RNA gene, partial sequence","77133","uncultured bacterium",97.61,251,100,3.17517e-116,431.39,NA,NA,NA,NA
+"Myco_34",8,"PV208389","Mollicutes bacterium SLUWU-24 16S ribosomal RNA gene, partial sequence","3402861","Mollicutes bacterium SLUWU-24",97.61,251,100,3.17517e-116,431.39,"Mollicutes",NA,NA,NA
+"Myco_34",9,"KP951764","Uncultured bacterium clone I3Q1XXJ01AX2OX 16S ribosomal RNA gene, partial sequence","77133","uncultured bacterium",97.61,251,100,3.17517e-116,431.39,NA,NA,NA,NA
+"Myco_34",10,"KP947194","Uncultured bacterium clone IZ1RPV403CXVV2 16S ribosomal RNA gene, partial sequence","77133","uncultured bacterium",97.61,251,100,3.17517e-116,431.39,NA,NA,NA,NA

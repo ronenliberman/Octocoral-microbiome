@@ -1,0 +1,4 @@
+﻿Searched: 2026-10-07 11:54
+Local BLAST+ (C:\Users\rliberma.NSU.000\tools\audit_refs\ncbi-blast-2.17.0+\bin), database NCBI 16S_ribosomal_RNA downloaded 1 Oct 2026
+megablast, max_target_seqs 10; blastn for queries without a megablast hit: 
+Queries: 26 | with hits: 26
