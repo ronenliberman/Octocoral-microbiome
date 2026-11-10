@@ -44,8 +44,12 @@ fiag124) used. Changing one changes a published result (AGENTS.md §3).
 | ANCOM-BC2 | Unrarefied filtered counts |
 
 ### Statistics
-- PERMANOVA with `vegan::adonis2`, sequential terms. The script uses 999
-  permutations; see PROJECT_CONTEXT.md "Open items" for the Table 2 footnote.
+- PERMANOVA with `vegan::adonis2`, sequential terms, on Aitchison distances.
+  **Table 2 (Species × Year and Species × Site models): 9,999 permutations**,
+  `set.seed(123)` immediately before, as the published footnote states
+  (decided by Ronen, 10 Nov 2026). The within-host and supplementary
+  PERMANOVAs (`Supplementary_Materials.R`, and the within-host models in the
+  main script) keep 999; the Table S7 caption says 999.
 - ANCOM-BC2 within each host for year (reference 2023) and for site; FDR,
   alpha = 0.05.
 - `set.seed(123)` before any random process.

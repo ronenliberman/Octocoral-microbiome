@@ -496,16 +496,19 @@ cat("\n--- 5D: Multi-factor PERMANOVA (Aitchison) ---\n")
 ait_dist <- as.dist(octo_clr$beta_diversity$euclidean)
 meta_clr <- octo_clr$sample_table
 
+# These two models are Table 2 of the paper: 9,999 permutations, as its
+# footnote states. The seed fixes the permutation p-values.
+set.seed(123)
 # Species × Year
 permanova_ait_spp_year <- adonis2(
-  ait_dist ~ SPP * Year, data = meta_clr, permutations = 999, by = "terms"
+  ait_dist ~ SPP * Year, data = meta_clr, permutations = 9999, by = "terms"
 )
 cat("PERMANOVA Aitchison: Species × Year\n")
 print(permanova_ait_spp_year)
 
 # Species × Site
 permanova_ait_spp_site <- adonis2(
-  ait_dist ~ SPP * Site, data = meta_clr, permutations = 999, by = "terms"
+  ait_dist ~ SPP * Site, data = meta_clr, permutations = 9999, by = "terms"
 )
 cat("PERMANOVA Aitchison: Species × Site\n")
 print(permanova_ait_spp_site)
@@ -647,30 +650,30 @@ for (label in c("Rarefied Bray-Curtis", "TSS Bray-Curtis", "CLR Aitchison")) {
   ))
 }
 
-# Multi-factor
-for (i in 1:nrow(permanova_spp_year)) {
-  rn <- rownames(permanova_spp_year)[i]
+# Multi-factor: the two Table 2 models (5D, Aitchison, 9,999 permutations)
+for (i in 1:nrow(permanova_ait_spp_year)) {
+  rn <- rownames(permanova_ait_spp_year)[i]
   if (rn %in% c("SPP", "Year", "SPP:Year")) {
     permanova_summary <- rbind(permanova_summary, data.frame(
-      Analysis = "Multi-factor (SPP × Year)", Factor = rn,
-      Df = permanova_spp_year[rn, "Df"],
-      R2 = round(permanova_spp_year[rn, "R2"], 4),
-      F_stat = round(permanova_spp_year[rn, "F"], 2),
-      P = permanova_spp_year[rn, "Pr(>F)"],
+      Analysis = "Multi-factor Aitchison (SPP × Year)", Factor = rn,
+      Df = permanova_ait_spp_year[rn, "Df"],
+      R2 = round(permanova_ait_spp_year[rn, "R2"], 4),
+      F_stat = round(permanova_ait_spp_year[rn, "F"], 2),
+      P = permanova_ait_spp_year[rn, "Pr(>F)"],
       stringsAsFactors = FALSE
     ))
   }
 }
 
-for (i in 1:nrow(permanova_spp_site)) {
-  rn <- rownames(permanova_spp_site)[i]
+for (i in 1:nrow(permanova_ait_spp_site)) {
+  rn <- rownames(permanova_ait_spp_site)[i]
   if (rn %in% c("SPP", "Site", "SPP:Site")) {
     permanova_summary <- rbind(permanova_summary, data.frame(
-      Analysis = "Multi-factor (SPP × Site)", Factor = rn,
-      Df = permanova_spp_site[rn, "Df"],
-      R2 = round(permanova_spp_site[rn, "R2"], 4),
-      F_stat = round(permanova_spp_site[rn, "F"], 2),
-      P = permanova_spp_site[rn, "Pr(>F)"],
+      Analysis = "Multi-factor Aitchison (SPP × Site)", Factor = rn,
+      Df = permanova_ait_spp_site[rn, "Df"],
+      R2 = round(permanova_ait_spp_site[rn, "R2"], 4),
+      F_stat = round(permanova_ait_spp_site[rn, "F"], 2),
+      P = permanova_ait_spp_site[rn, "Pr(>F)"],
       stringsAsFactors = FALSE
     ))
   }
@@ -721,15 +724,15 @@ main_perm_table <- data.frame(
 
 # SPP × Year model
 for (rn in c("SPP", "Year", "SPP:Year", "Residual", "Total")) {
-  if (rn %in% rownames(permanova_clr_spp_year)) {
+  if (rn %in% rownames(permanova_ait_spp_year)) {
     main_perm_table <- rbind(main_perm_table, data.frame(
       Factor = rn,
-      Df = permanova_clr_spp_year[rn, "Df"],
-      `Sum of Squares` = round(permanova_clr_spp_year[rn, "SumOfSqs"], 0),
-      R2 = round(permanova_clr_spp_year[rn, "R2"], 4),
-      F_stat = ifelse(is.na(permanova_clr_spp_year[rn, "F"]), NA,
-                      round(permanova_clr_spp_year[rn, "F"], 2)),
-      P = permanova_clr_spp_year[rn, "Pr(>F)"],
+      Df = permanova_ait_spp_year[rn, "Df"],
+      `Sum of Squares` = round(permanova_ait_spp_year[rn, "SumOfSqs"], 0),
+      R2 = round(permanova_ait_spp_year[rn, "R2"], 4),
+      F_stat = ifelse(is.na(permanova_ait_spp_year[rn, "F"]), NA,
+                      round(permanova_ait_spp_year[rn, "F"], 2)),
+      P = permanova_ait_spp_year[rn, "Pr(>F)"],
       stringsAsFactors = FALSE, check.names = FALSE
     ))
   }
@@ -737,14 +740,14 @@ for (rn in c("SPP", "Year", "SPP:Year", "Residual", "Total")) {
 
 # Site and SPP:Site from the site model
 for (rn in c("Site", "SPP:Site")) {
-  if (rn %in% rownames(permanova_clr_spp_site)) {
+  if (rn %in% rownames(permanova_ait_spp_site)) {
     main_perm_table <- rbind(main_perm_table, data.frame(
       Factor = rn,
-      Df = permanova_clr_spp_site[rn, "Df"],
-      `Sum of Squares` = round(permanova_clr_spp_site[rn, "SumOfSqs"], 0),
-      R2 = round(permanova_clr_spp_site[rn, "R2"], 4),
-      F_stat = round(permanova_clr_spp_site[rn, "F"], 2),
-      P = permanova_clr_spp_site[rn, "Pr(>F)"],
+      Df = permanova_ait_spp_site[rn, "Df"],
+      `Sum of Squares` = round(permanova_ait_spp_site[rn, "SumOfSqs"], 0),
+      R2 = round(permanova_ait_spp_site[rn, "R2"], 4),
+      F_stat = round(permanova_ait_spp_site[rn, "F"], 2),
+      P = permanova_ait_spp_site[rn, "Pr(>F)"],
       stringsAsFactors = FALSE, check.names = FALSE
     ))
   }
@@ -792,7 +795,7 @@ ft_perm <- flextable(main_perm_table) %>%
   hline(i = 5, border = fp_border(width = 1.5, color = "black")) %>%
   add_footer_lines(
     paste0("PERMANOVA on Aitchison distances (Euclidean distance on CLR-transformed data), ",
-           "999 permutations, sequential (Type I) sums of squares. ",
+           "9999 permutations, sequential (Type I) sums of squares. ",
            "Species × Year and Species × Site are from separate models. ",
            "*** P < 0.001, ** P < 0.01, * P < 0.05.")
   ) %>%
